@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <div className="border border-indigo-500 p-4 rounded-lg m-4">
+        <div className="max-w-screen-md mx-auto my-4">
           <CodeEditor />
         </div>
         <h1 className="text-indigo-600 font-bold">
