@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import Editor, { OnMount } from '@monaco-editor/react';
 import Select, { SingleValue } from 'react-select';
+import { ChevronDown, ChevronUp } from 'react-feather';
 
 import Button from '../Button';
 
@@ -14,6 +15,21 @@ export default function CodeEditor() {
   const editorRef = useRef<any>(null);
   const [languages, setLanguages] = useState<Option[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<Option>({ label: 'typescript', value: 'typescript' });
+  const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
+  const editorOptions: any = {
+    formatOnPaste: true,
+    tabSize: 2,
+    minimap: {
+      enabled: false,
+    },
+    lineNumbers: 'off',
+    folding: false,
+    padding: {
+      top: 5,
+      bottom: 5,
+    },
+    scrollBeyondLastLine: false,
+  };
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
@@ -28,7 +44,7 @@ export default function CodeEditor() {
   };
 
   return (
-    <section className="mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <section className="bg-white rounded-lg shadow-md dark:bg-gray-800">
       <div className="flex justify-between items-center p-4">
         <h3>
           Write Some Trick
@@ -44,31 +60,28 @@ export default function CodeEditor() {
           <Button>
             Publish
           </Button>
+          <Button
+            onClick={() => setIsEditorOpen(!isEditorOpen)}
+            type={isEditorOpen ? 'default' : 'primary'}
+          >
+            { isEditorOpen ? <ChevronUp /> : <ChevronDown /> }
+          </Button>
         </div>
       </div>
-      <div className="rounded-b-lg overflow-hidden">
-        <Editor
-          height="250px"
-          language={selectedLanguage.value}
-          defaultValue={code}
-          theme="vs-dark"
-          onMount={handleEditorDidMount}
-          loading={<div className="w-full h-full bg-indigo-200" />}
-          options={{
-            formatOnPaste: true,
-            tabSize: 2,
-            minimap: {
-              enabled: false,
-            },
-            lineNumbers: 'off',
-            folding: false,
-            padding: {
-              top: 5,
-              bottom: 5,
-            },
-            scrollBeyondLastLine: false,
-          }}
-        />
+      <div className={`rounded-b-lg overflow-hidden ${isEditorOpen ? 'h-auto' : 'h-0'}`}>
+        {
+          isEditorOpen && (
+            <Editor
+              height="150px"
+              language={selectedLanguage.value}
+              defaultValue={code}
+              theme="vs-dark"
+              onMount={handleEditorDidMount}
+              loading={<div className="w-full h-full dark:bg-gray-900" />}
+              options={editorOptions}
+            />
+          )
+        }
       </div>
     </section>
   );
