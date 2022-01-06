@@ -3,6 +3,7 @@ import Head from 'next/head'
 
 import { useAppSelector, useAppDispatch } from '../store'
 import { increment, decrement } from '../store/modules/counter'
+import CodeEditor from '../components/CodeEditor'
 
 const Home: NextPage = () => {
   const dispatch = useAppDispatch()
@@ -16,6 +17,9 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
+        <div className="border border-indigo-500 p-4 rounded-lg m-4">
+          <CodeEditor />
+        </div>
         <h1 className="text-indigo-600 font-bold">
           Some Code Samples
         </h1>
