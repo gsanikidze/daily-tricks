@@ -1,8 +1,8 @@
-import React from 'react'
-import Editor from '@monaco-editor/react'
+import React from 'react';
+import Editor from '@monaco-editor/react';
 
 export default function CodeEditor() {
-  const code = `const a = 2;\nconst b = 3;\nconsole.log(b);\nlet b = 2;`
+  const code = 'const a = 2;\nconst b = 3;\nconsole.log(b);\nlet b = 2;';
 
   return (
     <Editor
@@ -15,8 +15,8 @@ export default function CodeEditor() {
         tabSize: 2,
         minimap: {
           enabled: false,
-        }
+        },
       }}
     />
-  )
+  );
 }

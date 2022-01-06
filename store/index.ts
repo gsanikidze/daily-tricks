@@ -10,8 +10,8 @@ const store = configureStore({
 });
 
 export type AppState = ReturnType<typeof store.getState>;
-export const useAppSelector = <T>(selector: (s: AppState) => T): T => useSelector<AppState>(selector) as T;
-export type AppDispatch = typeof store.dispatch
-export const useAppDispatch = () => useDispatch<AppDispatch>()
+export const useAppSelector = <T>(cb: (s: AppState) => T): T => useSelector<AppState>(cb) as T;
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
 
 export default store;
