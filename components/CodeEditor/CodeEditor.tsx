@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 
 import Button from '../Button';
 import { addPost } from '../../store/modules/feed';
+import Card from '../Card';
 
 interface Option {
   value: string;
@@ -54,7 +55,7 @@ export default function CodeEditor() {
   };
 
   return (
-    <section className="bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <Card>
       <div className="flex justify-between items-center p-4">
         <h3>
           Write Some Trick
@@ -93,6 +94,6 @@ export default function CodeEditor() {
           )
         }
       </div>
-    </section>
+    </Card>
   );
 }
