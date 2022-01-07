@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import Button from '../Button';
 import { addPost } from '../../store/modules/feed';
 import Card from '../Card';
+import Input from '../Input';
 
 interface Option {
   value: string;
@@ -19,6 +20,7 @@ export default function CodeEditor() {
   const [languages, setLanguages] = useState<Option[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<Option>({ label: 'typescript', value: 'typescript' });
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
+  const [title, setTitle] = useState('');
   const editorOptions: any = {
     formatOnPaste: true,
     tabSize: 2,
@@ -50,16 +52,26 @@ export default function CodeEditor() {
     dispatch(addPost({
       language: selectedLanguage.value,
       value: editorRef.current.getValue(),
+      title,
     }));
     setIsEditorOpen(false);
+    setTitle('');
+  };
+
+  const onTitleChange = (value: string) => {
+    setTitle(value);
   };
 
   return (
     <Card>
       <div className="flex justify-between items-center p-4">
-        <h3>
-          Write Some Trick
-        </h3>
+        {
+          isEditorOpen ? <Input placeholder="Title" onChange={onTitleChange} /> : (
+            <h3>
+              Write Some Trick
+            </h3>
+          )
+        }
         <div className="space-x-4 flex items-center">
           <Select
             instanceId="languages"

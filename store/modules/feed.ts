@@ -8,12 +8,14 @@ interface State {
     value: string;
     language: string;
     createdAt: number;
+    title: string;
   }[],
 }
 
 interface AddPostPayload {
   value: string;
   language: string;
+  title: string;
 }
 
 const feedSlice = createSlice({
@@ -25,9 +27,10 @@ const feedSlice = createSlice({
     addPost: (state, action: PayloadAction<AddPostPayload>) => {
       state.posts.push({
         id: `${Date.now()}`,
+        createdAt: Date.now(),
         value: action.payload.value,
         language: action.payload.language,
-        createdAt: Date.now(),
+        title: action.payload.title,
       });
     },
   },

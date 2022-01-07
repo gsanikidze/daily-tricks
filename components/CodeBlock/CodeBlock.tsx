@@ -5,7 +5,7 @@ import vs2015 from 'react-syntax-highlighter/dist/cjs/styles/hljs/vs2015';
 interface Props {
   children: string;
   language: string;
-  className: string;
+  className?: string;
 }
 
 export default function CodeBlock({ children, language, className }: Props) {
@@ -15,3 +15,7 @@ export default function CodeBlock({ children, language, className }: Props) {
     </SyntaxHighlighter>
   );
 }
+
+CodeBlock.defaultProps = {
+  className: '',
+};

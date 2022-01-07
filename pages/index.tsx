@@ -21,8 +21,14 @@ const Home: NextPage = () => {
           <CodeEditor />
           {
             posts.map((p) => (
-              <Card key={p.id}>
-                <CodeBlock key={p.id} language={p.language} className="mt-4">
+              <Card key={p.id} className="mt-4">
+                <div className="flex justify-between items-center p-4">
+                  <h3>{p.title}</h3>
+                  <h6>
+                    {`${p.language} | ${p.createdAt}`}
+                  </h6>
+                </div>
+                <CodeBlock key={p.id} language={p.language}>
                   { p.value }
                 </CodeBlock>
               </Card>
