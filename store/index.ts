@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 
 import feed from './modules/feed';
+import user from './modules/user';
 
 const store = configureStore({
   reducer: {
     feed,
+    user,
   },
 });
 
