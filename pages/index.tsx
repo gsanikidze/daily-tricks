@@ -5,9 +5,10 @@ import CodeEditor from '../components/CodeEditor';
 import { useAppSelector } from '../store';
 import CodeBlock from '../components/CodeBlock';
 import Card from '../components/Card';
+import { selectPosts } from '../store/modules/feed';
 
 const Home: NextPage = () => {
-  const posts = useAppSelector((st) => st.feed.posts);
+  const posts = useAppSelector(selectPosts);
 
   return (
     <div>

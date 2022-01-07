@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import type { AppState } from '..';
+
 interface State {
   posts: {
     id: string;
@@ -32,6 +34,9 @@ const feedSlice = createSlice({
 });
 
 const { addPost } = feedSlice.actions;
+
+export const selectPosts = (st: AppState) => [...st.feed.posts]
+  .sort((p1, p2) => p2.createdAt - p1.createdAt);
 
 export { addPost };
 export default feedSlice.reducer;
