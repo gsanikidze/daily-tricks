@@ -6,16 +6,17 @@ interface Props {
   type?: 'primary' | 'secondary' | 'default';
   size?: 'default' | 'sm';
   onClick?: () => void;
+  beforeAddon?: JSX.Element;
 }
 
 export default function Button({
-  children, type, size, onClick,
+  children, type, size, onClick, beforeAddon,
 }: Props) {
   const [classes, setClasses] = useState<string>();
 
   useEffect(() => {
     setClasses(classnames(
-      'font-medium tracking-wide text-white capitalize transition-colors duration-200 transform focus:outline-none focus:ring focus:ring-opacity-80',
+      'flex items-center font-medium tracking-wide text-white capitalize transition-colors duration-200 transform focus:outline-none focus:ring focus:ring-opacity-80',
       {
         'bg-blue-600 hover:bg-blue-500 focus:ring-blue-300': type === 'primary',
         'bg-pink-600 hover:bg-pink-500 focus:ring-pink-300': type === 'secondary',
@@ -28,6 +29,7 @@ export default function Button({
 
   return (
     <button className={classes} onClick={onClick}>
+      { beforeAddon && <div className={size === 'sm' ? 'mr-2' : 'mr-4'}>{beforeAddon}</div> }
       { children }
     </button>
   );
@@ -37,4 +39,5 @@ Button.defaultProps = {
   type: 'primary',
   size: 'default',
   onClick: null,
+  beforeAddon: null,
 };

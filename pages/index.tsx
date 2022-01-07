@@ -7,6 +7,7 @@ import CodeBlock from '../components/CodeBlock';
 import Card from '../components/Card';
 import { selectPosts } from '../store/modules/feed';
 import Tag from '../components/Tag';
+import Header from '../components/Header';
 
 const Home: NextPage = () => {
   const posts = useAppSelector(selectPosts);
@@ -17,6 +18,7 @@ const Home: NextPage = () => {
         <title>Daily Tricks</title>
         <meta name="description" content="Daily Tricks" />
       </Head>
+      <Header />
       <main>
         <div className="max-w-screen-md mx-auto my-4">
           <CodeEditor />
