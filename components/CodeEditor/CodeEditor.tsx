@@ -2,8 +2,10 @@ import React, { useRef, useState } from 'react';
 import Editor, { OnMount } from '@monaco-editor/react';
 import Select, { SingleValue } from 'react-select';
 import { ChevronDown, ChevronUp } from 'react-feather';
+import { useDispatch } from 'react-redux';
 
 import Button from '../Button';
+import { addPost } from '../../store/modules/feed';
 
 interface Option {
   value: string;
@@ -11,7 +13,7 @@ interface Option {
 }
 
 export default function CodeEditor() {
-  const code = 'const a = 2;\nconst b = 3;\nconsole.log(b);';
+  const dispatch = useDispatch();
   const editorRef = useRef<any>(null);
   const [languages, setLanguages] = useState<Option[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<Option>({ label: 'typescript', value: 'typescript' });
@@ -43,6 +45,14 @@ export default function CodeEditor() {
     }
   };
 
+  const onPublish = () => {
+    dispatch(addPost({
+      language: selectedLanguage.value,
+      value: editorRef.current.getValue(),
+    }));
+    setIsEditorOpen(false);
+  };
+
   return (
     <section className="bg-white rounded-lg shadow-md dark:bg-gray-800">
       <div className="flex justify-between items-center p-4">
@@ -57,7 +67,7 @@ export default function CodeEditor() {
             value={selectedLanguage}
             className="w-40"
           />
-          <Button>
+          <Button onClick={onPublish}>
             Publish
           </Button>
           <Button
@@ -74,7 +84,7 @@ export default function CodeEditor() {
             <Editor
               height="150px"
               language={selectedLanguage.value}
-              defaultValue={code}
+              defaultValue="// place your code hire"
               theme="vs-dark"
               onMount={handleEditorDidMount}
               loading={<div className="w-full h-full dark:bg-gray-900" />}

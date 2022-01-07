@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 
-import counter from './modules/counter';
+import feed from './modules/feed';
 
 const store = configureStore({
   reducer: {
-    counter,
+    feed,
   },
 });
 
