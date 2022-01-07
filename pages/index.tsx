@@ -6,6 +6,7 @@ import { useAppSelector } from '../store';
 import CodeBlock from '../components/CodeBlock';
 import Card from '../components/Card';
 import { selectPosts } from '../store/modules/feed';
+import Tag from '../components/Tag';
 
 const Home: NextPage = () => {
   const posts = useAppSelector(selectPosts);
@@ -21,13 +22,22 @@ const Home: NextPage = () => {
           <CodeEditor />
           {
             posts.map((p) => (
-              <Card key={p.id} className="mt-4">
-                <div className="flex justify-between items-center p-4">
-                  <h3>{p.title}</h3>
-                  <h6>
-                    {`${p.language} | ${p.createdAt}`}
-                  </h6>
-                </div>
+              <Card
+                key={p.id}
+                className="mt-4 overflow-hidden"
+                title={p.title}
+                addonBefore={(
+                  <div className="flex justify-between items-center">
+                    <code className="text-sm">
+                      {new Date(p.createdAt).toLocaleDateString()}
+                    </code>
+                    <Tag>
+                      {p.language}
+                    </Tag>
+                  </div>
+                )}
+              >
+
                 <CodeBlock key={p.id} language={p.language}>
                   { p.value }
                 </CodeBlock>

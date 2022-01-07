@@ -67,9 +67,9 @@ export default function CodeEditor() {
       <div className="flex justify-between items-center p-4">
         {
           isEditorOpen ? <Input placeholder="Title" onChange={onTitleChange} /> : (
-            <h3>
+            <h4>
               Write Some Trick
-            </h3>
+            </h4>
           )
         }
         <div className="space-x-4 flex items-center">
