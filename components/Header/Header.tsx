@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GitHub } from 'react-feather';
 import { GithubAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 
 import Button from '../Button';
-import { logIn } from '../../store/modules/user';
+import { logIn, getStoredUser, logOut } from '../../store/modules/user';
+import { useAppSelector } from '../../store';
 
 export default function Header() {
   const dispatch = useDispatch();
+  const isAuthorized = useAppSelector((st) => st.user.isAuthorized);
 
   const authWithGithub = async () => {
     const provider = new GithubAuthProvider();
@@ -31,6 +33,10 @@ export default function Header() {
     }
   };
 
+  useEffect(() => {
+    dispatch(getStoredUser({}));
+  }, [dispatch]);
+
   return (
     <header
       className="bg-white shadow dark:bg-gray-800 py-4"
@@ -39,13 +45,21 @@ export default function Header() {
         <h5>
           Daily Tricks
         </h5>
-        <Button
-          type="default"
-          beforeAddon={<GitHub size={16} />}
-          onClick={authWithGithub}
-        >
-          Login With GitHub
-        </Button>
+        {
+          isAuthorized ? (
+            <Button type="default" onClick={() => dispatch(logOut())}>
+              Log Out
+            </Button>
+          ) : (
+            <Button
+              type="default"
+              beforeAddon={<GitHub size={16} />}
+              onClick={authWithGithub}
+            >
+              Login With GitHub
+            </Button>
+          )
+        }
       </div>
     </header>
   );

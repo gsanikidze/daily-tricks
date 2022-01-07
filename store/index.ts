@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
+import authMiddleware from './middlewares/auth';
 
 import feed from './modules/feed';
 import user from './modules/user';
@@ -9,6 +10,8 @@ const store = configureStore({
     feed,
     user,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+    .concat(authMiddleware),
 });
 
 export type AppState = ReturnType<typeof store.getState>;
