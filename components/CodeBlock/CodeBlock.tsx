@@ -17,7 +17,7 @@ export default function CodeBlock({ children, language, className }: Props) {
   return (
     <div className={`relative ${className}`}>
       <button
-        className="absolute right-4 top-4 cursor-pointer"
+        className="absolute right-4 top-3 cursor-pointer"
         onClick={copyToClipboard}
       >
         <Copy color="white" size={16} />

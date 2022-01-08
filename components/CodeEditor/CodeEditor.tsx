@@ -22,7 +22,7 @@ export default function CodeEditor() {
   const [selectedLanguage, setSelectedLanguage] = useState<Option>({ label: 'typescript', value: 'typescript' });
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
   const [title, setTitle] = useState('');
-  const userId = useAppSelector((st) => st.user.profile.uid);
+  const user = useAppSelector((st) => st.user.profile);
   const editorOptions: any = {
     formatOnPaste: true,
     tabSize: 2,
@@ -55,7 +55,7 @@ export default function CodeEditor() {
       language: selectedLanguage.value,
       value: editorRef.current.getValue(),
       title,
-      userId: userId || '',
+      author: user,
     }));
     setIsEditorOpen(false);
     setTitle('');

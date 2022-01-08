@@ -8,6 +8,7 @@ import Card from '../components/Card';
 import { selectPosts } from '../store/modules/feed';
 import Tag from '../components/Tag';
 import Header from '../components/Header';
+import UserAvatar from '../components/UserAvatar';
 
 const Home: NextPage = () => {
   const posts = useAppSelector(selectPosts);
@@ -30,9 +31,11 @@ const Home: NextPage = () => {
                 title={p.title}
                 addonBefore={(
                   <div className="flex justify-between items-center">
-                    <div>
-                      author
-                    </div>
+                    <UserAvatar
+                      name={p.author.displayName || ''}
+                      alt={p.author.displayName || ''}
+                      photoURL={p.author.photoURL}
+                    />
                     <div className="flex items-center space-x-4">
                       <code className="text-sm">
                         {new Date(p.createdAt).toLocaleDateString()}

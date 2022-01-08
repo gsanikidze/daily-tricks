@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { AppState } from '..';
+import type { User } from './user';
 
 interface State {
   posts: {
@@ -9,7 +10,7 @@ interface State {
     language: string;
     createdAt: number;
     title: string;
-    userId: string;
+    author: User;
   }[],
 }
 
@@ -17,7 +18,7 @@ interface AddPostPayload {
   value: string;
   language: string;
   title: string;
-  userId: string;
+  author: User;
 }
 
 const feedSlice = createSlice({
@@ -33,7 +34,7 @@ const feedSlice = createSlice({
         value: action.payload.value,
         language: action.payload.language,
         title: action.payload.title,
-        userId: action.payload.userId,
+        author: action.payload.author,
       });
     },
   },
