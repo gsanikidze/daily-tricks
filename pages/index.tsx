@@ -30,12 +30,17 @@ const Home: NextPage = () => {
                 title={p.title}
                 addonBefore={(
                   <div className="flex justify-between items-center">
-                    <code className="text-sm">
-                      {new Date(p.createdAt).toLocaleDateString()}
-                    </code>
-                    <Tag>
-                      {p.language}
-                    </Tag>
+                    <div>
+                      author
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <code className="text-sm">
+                        {new Date(p.createdAt).toLocaleDateString()}
+                      </code>
+                      <Tag>
+                        {p.language}
+                      </Tag>
+                    </div>
                   </div>
                 )}
               >

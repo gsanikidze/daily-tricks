@@ -9,6 +9,7 @@ interface State {
     language: string;
     createdAt: number;
     title: string;
+    userId: string;
   }[],
 }
 
@@ -16,6 +17,7 @@ interface AddPostPayload {
   value: string;
   language: string;
   title: string;
+  userId: string;
 }
 
 const feedSlice = createSlice({
@@ -31,6 +33,7 @@ const feedSlice = createSlice({
         value: action.payload.value,
         language: action.payload.language,
         title: action.payload.title,
+        userId: action.payload.userId,
       });
     },
   },

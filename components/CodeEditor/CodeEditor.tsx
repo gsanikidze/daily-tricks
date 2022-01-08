@@ -8,6 +8,7 @@ import Button from '../Button';
 import { addPost } from '../../store/modules/feed';
 import Card from '../Card';
 import Input from '../Input';
+import { useAppSelector } from '../../store';
 
 interface Option {
   value: string;
@@ -21,6 +22,7 @@ export default function CodeEditor() {
   const [selectedLanguage, setSelectedLanguage] = useState<Option>({ label: 'typescript', value: 'typescript' });
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
   const [title, setTitle] = useState('');
+  const userId = useAppSelector((st) => st.user.profile.uid);
   const editorOptions: any = {
     formatOnPaste: true,
     tabSize: 2,
@@ -53,6 +55,7 @@ export default function CodeEditor() {
       language: selectedLanguage.value,
       value: editorRef.current.getValue(),
       title,
+      userId: userId || '',
     }));
     setIsEditorOpen(false);
     setTitle('');
