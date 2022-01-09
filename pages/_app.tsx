@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 import store from '../store';
 import '../styles/globals.css';
-import firebaseConfig from '../constants/firebaseConfig';
+import { firebaseConfig } from '../constants';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {

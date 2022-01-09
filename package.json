@@ -18,7 +18,10 @@
     "react-feather": "^2.0.9",
     "react-redux": "^7.2.6",
     "react-select": "^5.2.1",
-    "react-syntax-highlighter": "^15.4.5"
+    "react-syntax-highlighter": "^15.4.5",
+    "typeorm": "0.2.41",
+    "reflect-metadata": "^0.1.10",
+    "mongodb": "^3.0.8"
   },
   "devDependencies": {
     "@types/node": "17.0.8",
