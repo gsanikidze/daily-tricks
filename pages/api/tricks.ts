@@ -5,10 +5,12 @@ import { validate } from 'class-validator';
 import dbConnectionMiddleware from '../../apiMiddleware/dbConnectionMiddleware';
 import authMiddleware from '../../apiMiddleware/authMiddleware';
 import { Trick } from '../../db';
+import populateUserMiddleware from '../../apiMiddleware/populateUserMiddleware';
 
 type Data = {
   message: string;
   errors?: any[];
+  data?: Trick[];
 };
 
 export default async function handler(
@@ -35,6 +37,29 @@ export default async function handler(
 
       res.status(201).json({ message: 'Trick created' });
     }
+  } else if (req.method === 'GET') {
+    const records = await connection.manager.find(
+      Trick,
+      {
+        skip: Number(req.query.skip) || 0,
+        take: Number(req.query.take) || 10,
+      },
+    );
+    const populatedRecords = [];
+    const users: Record<string, any> = {};
+
+    for await (const record of records) {
+      if (!users[record.userId]) {
+        users[record.userId] = await populateUserMiddleware(record.userId);
+      }
+
+      populatedRecords.push({
+        ...record,
+        user: users[record.userId],
+      });
+    }
+
+    res.status(200).json({ message: 'Tricks found', data: populatedRecords });
   } else {
     res.status(405).json({ message: 'Method not allowed' });
   }
