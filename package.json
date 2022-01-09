@@ -10,8 +10,10 @@
   "dependencies": {
     "@monaco-editor/react": "^4.3.1",
     "@reduxjs/toolkit": "^1.7.1",
+    "class-validator": "^0.13.2",
     "classnames": "^2.2.6",
     "firebase": "^9.6.1",
+    "mongodb": "^3.0.8",
     "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -19,9 +21,8 @@
     "react-redux": "^7.2.6",
     "react-select": "^5.2.1",
     "react-syntax-highlighter": "^15.4.5",
-    "typeorm": "0.2.41",
     "reflect-metadata": "^0.1.10",
-    "mongodb": "^3.0.8"
+    "typeorm": "0.2.41"
   },
   "devDependencies": {
     "@types/node": "17.0.8",
