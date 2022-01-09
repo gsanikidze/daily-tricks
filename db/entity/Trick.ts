@@ -19,4 +19,8 @@ export default class Tricks {
   @Column({ type: 'string' })
   @IsString()
     title: string;
+
+  @Column({ type: 'string' })
+  @IsString()
+    userId: string;
 }

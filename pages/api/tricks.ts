@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { validate } from 'class-validator';
 
 import dbConnectionMiddleware from '../../apiMiddleware/dbConnectionMiddleware';
+import authMiddleware from '../../apiMiddleware/authMiddleware';
 import { Trick } from '../../db';
 
 type Data = {
@@ -17,10 +18,13 @@ export default async function handler(
   const connection = await dbConnectionMiddleware();
 
   if (req.method === 'POST') {
+    const userId = await authMiddleware(req, res) as string;
+
     const trick = new Trick();
     trick.value = req.body.value;
     trick.title = req.body.title;
     trick.language = req.body.language;
+    trick.userId = userId;
 
     const errors = await validate(trick);
 

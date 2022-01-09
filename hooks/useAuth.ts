@@ -1,4 +1,6 @@
-import { getAuth, GithubAuthProvider, signInWithPopup } from 'firebase/auth';
+import {
+  getAuth, GithubAuthProvider, signInWithPopup, getIdToken,
+} from 'firebase/auth';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../store';
@@ -14,12 +16,12 @@ const useAuth = () => {
 
     try {
       const res = await signInWithPopup(auth, provider);
-      const credential = GithubAuthProvider.credentialFromResult(res);
+      const credential = await getIdToken(res.user);
 
       if (credential) {
         dispatch(logIn({
           uid: res.user.uid,
-          accessToken: credential.accessToken,
+          accessToken: credential,
           displayName: res.user.displayName,
           email: res.user.email,
           photoURL: res.user.photoURL,
