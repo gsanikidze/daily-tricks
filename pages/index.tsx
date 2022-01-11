@@ -5,7 +5,6 @@ import CodeEditor from '../components/CodeEditor';
 import CodeBlock from '../components/CodeBlock';
 import Card from '../components/Card';
 import Tag from '../components/Tag';
-import Header from '../components/Header';
 import UserAvatar from '../components/UserAvatar';
 import { useGetTricksQuery } from '../store/modules/api';
 
@@ -18,7 +17,6 @@ const Home: NextPage = () => {
         <title>Daily Tricks</title>
         <meta name="description" content="Daily Tricks" />
       </Head>
-      <Header />
       <main>
         <div className="max-w-screen-md mx-auto my-4">
           <CodeEditor />

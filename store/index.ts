@@ -3,17 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import authMiddleware from './middlewares/auth';
+import generalMiddleware from './middlewares/general';
 import user from './modules/user';
+import layout from './modules/layout';
 import api from './modules/api';
 
 const store = configureStore({
   reducer: {
     user,
+    layout,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-    .concat(authMiddleware)
-    .concat(api.middleware),
+    .concat([authMiddleware, api.middleware, generalMiddleware]),
 });
 
 setupListeners(store.dispatch);

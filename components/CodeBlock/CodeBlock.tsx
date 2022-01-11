@@ -1,7 +1,10 @@
 import React from 'react';
 import { Copy } from 'react-feather';
+import { useDispatch } from 'react-redux';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import vs2015 from 'react-syntax-highlighter/dist/cjs/styles/hljs/vs2015';
+
+import { displayAlert } from '../../store/modules/layout';
 
 interface Props {
   children: string;
@@ -10,8 +13,14 @@ interface Props {
 }
 
 export default function CodeBlock({ children, language, className }: Props) {
+  const dispatch = useDispatch();
+
   const copyToClipboard = () => {
     window.navigator.clipboard.writeText(children);
+    dispatch(displayAlert({
+      title: 'Code copied on clipboard',
+      type: 'success',
+    }));
   };
 
   return (

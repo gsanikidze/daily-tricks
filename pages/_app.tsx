@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import store from '../store';
 import '../styles/globals.css';
 import { firebaseConfig } from '../constants';
+import Layout from '../components/Layout';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -16,7 +17,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </Provider>
   );
 }
