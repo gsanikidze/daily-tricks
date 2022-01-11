@@ -44,6 +44,9 @@ export default async function handler(
       {
         skip: Number(req.query.skip) || 0,
         take: Number(req.query.take) || 10,
+        order: {
+          createdAt: 'DESC',
+        },
       },
     );
     const populatedRecords = [];
