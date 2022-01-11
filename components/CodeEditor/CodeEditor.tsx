@@ -8,6 +8,7 @@ import Card from '../Card';
 import Input from '../Input';
 import { useAppSelector } from '../../store';
 import { useAddTrickMutation } from '../../store/modules/api';
+import useAuth from '../../hooks/useAuth';
 
 interface Option {
   value: string;
@@ -21,7 +22,8 @@ export default function CodeEditor() {
   const [selectedLanguage, setSelectedLanguage] = useState<Option>({ label: 'typescript', value: 'typescript' });
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
   const [title, setTitle] = useState('');
-  const user = useAppSelector((st) => st.user.profile);
+  const user = useAppSelector((st) => st.user);
+  const { authWithGithub } = useAuth();
   const editorOptions: any = {
     formatOnPaste: true,
     tabSize: 2,
@@ -50,11 +52,16 @@ export default function CodeEditor() {
   };
 
   const onPublish = () => {
+    if (!user.isAuthorized) {
+      authWithGithub();
+      return;
+    }
+
     addTrick({
       language: selectedLanguage.value,
       value: editorRef.current.getValue(),
       title,
-      userId: user.uid as string,
+      userId: user.profile.uid as string,
     });
     setIsEditorOpen(false);
     setTitle('');
@@ -75,16 +82,22 @@ export default function CodeEditor() {
           )
         }
         <div className="space-x-4 flex items-center">
-          <Select
-            instanceId="languages"
-            options={languages}
-            onChange={changeLanguage}
-            value={selectedLanguage}
-            className="w-40"
-          />
-          <Button onClick={onPublish}>
-            Publish
-          </Button>
+          {
+            isEditorOpen && (
+            <>
+              <Select
+                instanceId="languages"
+                options={languages}
+                onChange={changeLanguage}
+                value={selectedLanguage}
+                className="w-40"
+              />
+              <Button onClick={onPublish}>
+                Publish
+              </Button>
+            </>
+            )
+          }
           <Button
             onClick={() => setIsEditorOpen(!isEditorOpen)}
             type={isEditorOpen ? 'default' : 'primary'}
