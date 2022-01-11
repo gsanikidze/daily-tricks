@@ -27,6 +27,7 @@ export default async function handler(
     trick.title = req.body.title;
     trick.language = req.body.language;
     trick.userId = userId;
+    trick.createdAt = Date.now();
 
     const errors = await validate(trick);
 

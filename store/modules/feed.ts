@@ -3,15 +3,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AppState } from '..';
 import type { User } from './user';
 
+export interface Post {
+  id: string;
+  value: string;
+  language: string;
+  createdAt: number;
+  title: string;
+  author: User;
+}
 interface State {
-  posts: {
-    id: string;
-    value: string;
-    language: string;
-    createdAt: number;
-    title: string;
-    author: User;
-  }[],
+  posts: Post[],
 }
 
 interface AddPostPayload {

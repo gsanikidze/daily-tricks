@@ -1,7 +1,7 @@
 import {
   Entity, Column, ObjectIdColumn, ObjectID,
 } from 'typeorm';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 @Entity()
 export default class Tricks {
@@ -23,4 +23,8 @@ export default class Tricks {
   @Column({ type: 'string' })
   @IsString()
     userId: string;
+
+  @Column({ type: 'number' })
+  @IsNumber()
+    createdAt: number;
 }
