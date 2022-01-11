@@ -3,13 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import authMiddleware from './middlewares/auth';
-import feed from './modules/feed';
 import user from './modules/user';
 import api from './modules/api';
 
 const store = configureStore({
   reducer: {
-    feed,
     user,
     [api.reducerPath]: api.reducer,
   },

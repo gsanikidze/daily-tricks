@@ -2,13 +2,12 @@ import React, { useRef, useState } from 'react';
 import Editor, { OnMount } from '@monaco-editor/react';
 import Select, { SingleValue } from 'react-select';
 import { ChevronDown, ChevronUp } from 'react-feather';
-import { useDispatch } from 'react-redux';
 
 import Button from '../Button';
-import { addPost } from '../../store/modules/feed';
 import Card from '../Card';
 import Input from '../Input';
 import { useAppSelector } from '../../store';
+import { useAddTrickMutation } from '../../store/modules/api';
 
 interface Option {
   value: string;
@@ -16,8 +15,8 @@ interface Option {
 }
 
 export default function CodeEditor() {
-  const dispatch = useDispatch();
   const editorRef = useRef<any>(null);
+  const [addTrick] = useAddTrickMutation();
   const [languages, setLanguages] = useState<Option[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<Option>({ label: 'typescript', value: 'typescript' });
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
@@ -51,12 +50,12 @@ export default function CodeEditor() {
   };
 
   const onPublish = () => {
-    dispatch(addPost({
+    addTrick({
       language: selectedLanguage.value,
       value: editorRef.current.getValue(),
       title,
-      author: user,
-    }));
+      userId: user.uid as string,
+    });
     setIsEditorOpen(false);
     setTitle('');
   };
