@@ -7,15 +7,17 @@ interface Props {
   size?: 'default' | 'sm';
   onClick?: () => void;
   beforeAddon?: JSX.Element;
+  className?: string;
 }
 
 export default function Button({
-  children, type, size, onClick, beforeAddon,
+  children, type, size, onClick, beforeAddon, className,
 }: Props) {
   const [classes, setClasses] = useState<string>();
 
   useEffect(() => {
     setClasses(classnames(
+      className,
       'flex items-center font-medium tracking-wide text-white capitalize transition-colors duration-200 transform focus:outline-none focus:ring focus:ring-opacity-80',
       {
         'bg-blue-600 hover:bg-blue-500 focus:ring-blue-300': type === 'primary',
@@ -25,7 +27,7 @@ export default function Button({
         'px-2 py-1 text-sm rounded': size === 'sm',
       },
     ));
-  }, [type, size]);
+  }, [type, size, className]);
 
   return (
     <button className={classes} onClick={onClick}>
@@ -40,4 +42,5 @@ Button.defaultProps = {
   size: 'default',
   onClick: null,
   beforeAddon: null,
+  className: '',
 };

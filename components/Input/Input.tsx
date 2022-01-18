@@ -3,9 +3,10 @@ import React from 'react';
 interface Props {
   placeholder?: string;
   onChange?: (value: string) => void;
+  defaultValue?: string;
 }
 
-export default function Input({ placeholder, onChange }: Props) {
+export default function Input({ placeholder, onChange, defaultValue }: Props) {
   const onInputChange = (e: any) => {
     if (onChange) {
       onChange(e.target.value);
@@ -14,6 +15,7 @@ export default function Input({ placeholder, onChange }: Props) {
 
   return (
     <input
+      defaultValue={defaultValue}
       onInput={onInputChange}
       placeholder={placeholder}
       id="username"
@@ -26,4 +28,5 @@ export default function Input({ placeholder, onChange }: Props) {
 Input.defaultProps = {
   placeholder: null,
   onChange: null,
+  defaultValue: null,
 };

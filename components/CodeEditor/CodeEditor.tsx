@@ -15,13 +15,29 @@ interface Option {
   label: string;
 }
 
-export default function CodeEditor() {
+interface Props {
+  defaultOpen?: boolean;
+  showOpenButton?: boolean;
+  defaultTitle?: string;
+  id?: string;
+  code?: string;
+  language?: string;
+}
+
+export default function CodeEditor({
+  defaultOpen = false,
+  showOpenButton = true,
+  defaultTitle,
+  id,
+  code,
+  language,
+}: Props) {
   const editorRef = useRef<any>(null);
   const [addTrick] = useAddTrickMutation();
   const [languages, setLanguages] = useState<Option[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<Option>({ label: 'typescript', value: 'typescript' });
-  const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
-  const [title, setTitle] = useState('');
+  const [isEditorOpen, setIsEditorOpen] = useState<boolean>(defaultOpen);
+  const [title, setTitle] = useState(defaultTitle || '');
   const user = useAppSelector((st) => st.user);
   const { authWithGithub } = useAuth();
   const editorOptions: any = {
@@ -75,7 +91,7 @@ export default function CodeEditor() {
     <Card>
       <div className="flex justify-between items-center p-4">
         {
-          isEditorOpen ? <Input placeholder="Title" onChange={onTitleChange} /> : (
+          isEditorOpen ? <Input placeholder="Title" defaultValue={defaultTitle} onChange={onTitleChange} /> : (
             <h4>
               Write Some Trick
             </h4>
@@ -91,6 +107,7 @@ export default function CodeEditor() {
                 onChange={changeLanguage}
                 value={selectedLanguage}
                 className="w-40"
+                defaultInputValue={language}
               />
               <Button onClick={onPublish}>
                 Publish
@@ -98,12 +115,16 @@ export default function CodeEditor() {
             </>
             )
           }
-          <Button
-            onClick={() => setIsEditorOpen(!isEditorOpen)}
-            type={isEditorOpen ? 'default' : 'primary'}
-          >
-            { isEditorOpen ? <ChevronUp /> : <ChevronDown /> }
-          </Button>
+          {
+            showOpenButton && (
+              <Button
+                onClick={() => setIsEditorOpen(!isEditorOpen)}
+                type={isEditorOpen ? 'default' : 'primary'}
+              >
+                { isEditorOpen ? <ChevronUp /> : <ChevronDown /> }
+              </Button>
+            )
+          }
         </div>
       </div>
       <div className={`rounded-b-lg overflow-hidden ${isEditorOpen ? 'h-auto' : 'h-0'}`}>
@@ -112,7 +133,7 @@ export default function CodeEditor() {
             <Editor
               height="150px"
               language={selectedLanguage.value}
-              defaultValue="// place your code hire"
+              defaultValue={code || '// place your code hire'}
               theme="vs-dark"
               onMount={handleEditorDidMount}
               loading={<div className="w-full h-full dark:bg-gray-900" />}
@@ -124,3 +145,12 @@ export default function CodeEditor() {
     </Card>
   );
 }
+
+CodeEditor.defaultProps = {
+  defaultOpen: false,
+  showOpenButton: true,
+  defaultTitle: null,
+  id: null,
+  code: null,
+  language: null,
+};
