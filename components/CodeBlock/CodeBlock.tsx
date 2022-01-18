@@ -13,11 +13,12 @@ interface Props {
   children: string;
   language: string;
   title: string;
+  id: string;
   className?: string;
 }
 
 export default function CodeBlock({
-  children, language, className, canEdit, title,
+  children, language, className, canEdit, title, id,
 }: Props) {
   const dispatch = useDispatch();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -60,6 +61,7 @@ export default function CodeBlock({
         onClose={() => setIsEditorOpen(false)}
       >
         <CodeEditor
+          id={id}
           defaultOpen
           showOpenButton={false}
           defaultTitle={title}

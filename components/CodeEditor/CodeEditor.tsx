@@ -7,7 +7,7 @@ import Button from '../Button';
 import Card from '../Card';
 import Input from '../Input';
 import { useAppSelector } from '../../store';
-import { useAddTrickMutation } from '../../store/modules/api';
+import { useAddTrickMutation, useEditTrickMutation } from '../../store/modules/api';
 import useAuth from '../../hooks/useAuth';
 
 interface Option {
@@ -34,8 +34,12 @@ export default function CodeEditor({
 }: Props) {
   const editorRef = useRef<any>(null);
   const [addTrick] = useAddTrickMutation();
+  const [editTrick] = useEditTrickMutation();
   const [languages, setLanguages] = useState<Option[]>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState<Option>({ label: 'typescript', value: 'typescript' });
+  const [selectedLanguage, setSelectedLanguage] = useState<Option>(
+    language ? { label: language, value: language }
+      : { label: 'typescript', value: 'typescript' },
+  );
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(defaultOpen);
   const [title, setTitle] = useState(defaultTitle || '');
   const user = useAppSelector((st) => st.user);
@@ -73,12 +77,24 @@ export default function CodeEditor({
       return;
     }
 
-    addTrick({
-      language: selectedLanguage.value,
-      value: editorRef.current.getValue(),
-      title,
-      userId: user.profile.uid as string,
-    });
+    if (!id) {
+      addTrick({
+        language: selectedLanguage.value,
+        value: editorRef.current.getValue(),
+        title,
+        userId: user.profile.uid as string,
+      });
+    } else {
+      editTrick({
+        body: {
+          language: selectedLanguage.value,
+          value: editorRef.current.getValue(),
+          title,
+        },
+        id,
+      });
+    }
+
     setIsEditorOpen(false);
     setTitle('');
   };
@@ -107,7 +123,6 @@ export default function CodeEditor({
                 onChange={changeLanguage}
                 value={selectedLanguage}
                 className="w-40"
-                defaultInputValue={language}
               />
               <Button onClick={onPublish}>
                 Publish

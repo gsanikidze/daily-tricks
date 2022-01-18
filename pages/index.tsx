@@ -66,6 +66,7 @@ const Home = ({ activePage }: InferGetServerSidePropsType<typeof getServerSidePr
 
                 <CodeBlock
                   key={p.id}
+                  id={p.id}
                   language={p.language}
                   canEdit={user.profile.uid === p.user.uid}
                   title={p.title}

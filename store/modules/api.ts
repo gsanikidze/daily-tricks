@@ -18,6 +18,11 @@ interface CreatePost {
   title: string;
   userId: string;
 }
+interface UpdatePost {
+  value: string;
+  language: string;
+  title: string;
+}
 
 const queryObjToSt = (obj: Record<string, string | number>) => Object.entries(obj)
   .map(([key, value]) => `${key}=${value}`)
@@ -52,8 +57,17 @@ const api = createApi({
       transformResponse: (response: { data: Post }) => response.data,
       invalidatesTags: ['Post'],
     }),
+    editTrick: build.mutation<Post, { id: string, body: UpdatePost }>({
+      query: ({ id, body }) => ({
+        url: `tricks/${id}`,
+        method: 'PUT',
+        body,
+      }),
+      transformResponse: (response: { data: Post }) => response.data,
+      invalidatesTags: ['Post'],
+    }),
   }),
 });
 
-export const { useGetTricksQuery, useAddTrickMutation } = api;
+export const { useGetTricksQuery, useAddTrickMutation, useEditTrickMutation } = api;
 export default api;
