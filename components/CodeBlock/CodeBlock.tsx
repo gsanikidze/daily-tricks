@@ -1,5 +1,5 @@
 import React from 'react';
-import { Copy } from 'react-feather';
+import { Copy, Edit } from 'react-feather';
 import { useDispatch } from 'react-redux';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import vs2015 from 'react-syntax-highlighter/dist/cjs/styles/hljs/vs2015';
@@ -7,12 +7,15 @@ import vs2015 from 'react-syntax-highlighter/dist/cjs/styles/hljs/vs2015';
 import { displayAlert } from '../../store/modules/layout';
 
 interface Props {
+  canEdit: boolean;
   children: string;
   language: string;
   className?: string;
 }
 
-export default function CodeBlock({ children, language, className }: Props) {
+export default function CodeBlock({
+  children, language, className, canEdit,
+}: Props) {
   const dispatch = useDispatch();
 
   const copyToClipboard = () => {
@@ -25,12 +28,17 @@ export default function CodeBlock({ children, language, className }: Props) {
 
   return (
     <div className={`relative ${className}`}>
-      <button
-        className="absolute right-4 top-3 cursor-pointer"
-        onClick={copyToClipboard}
-      >
-        <Copy color="white" size={16} />
-      </button>
+      <span className="absolute right-4 top-3 flex space-x-4">
+        <Copy
+          color="white"
+          size={16}
+          className="cursor-pointer"
+          onClick={copyToClipboard}
+        />
+        {
+          canEdit && <Edit color="white" size={16} className="cursor-pointer" />
+        }
+      </span>
       <SyntaxHighlighter language={language} style={vs2015}>
         { children }
       </SyntaxHighlighter>

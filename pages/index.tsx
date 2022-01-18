@@ -10,12 +10,14 @@ import Tag from '../components/Tag';
 import UserAvatar from '../components/UserAvatar';
 import { useGetTricksQuery } from '../store/modules/api';
 import Pagination from '../components/Pagination';
+import { useAppSelector } from '../store';
 
 interface Props {
   activePage: number;
 }
 
 const Home = ({ activePage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const user = useAppSelector((st) => st.user);
   const router = useRouter();
   const take = 10;
   const { isLoading, isFetching, data = { records: [], count: 0 } } = useGetTricksQuery({
@@ -62,7 +64,11 @@ const Home = ({ activePage }: InferGetServerSidePropsType<typeof getServerSidePr
                 )}
               >
 
-                <CodeBlock key={p.id} language={p.language}>
+                <CodeBlock
+                  key={p.id}
+                  language={p.language}
+                  canEdit={user.profile.uid === p.user.uid}
+                >
                   { p.value }
                 </CodeBlock>
               </Card>
