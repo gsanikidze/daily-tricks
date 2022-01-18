@@ -1,5 +1,7 @@
-import type { NextPage } from 'next';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useCallback } from 'react';
 
 import CodeEditor from '../components/CodeEditor';
 import CodeBlock from '../components/CodeBlock';
@@ -7,9 +9,24 @@ import Card from '../components/Card';
 import Tag from '../components/Tag';
 import UserAvatar from '../components/UserAvatar';
 import { useGetTricksQuery } from '../store/modules/api';
+import Pagination from '../components/Pagination';
 
-const Home: NextPage = () => {
-  const { isLoading, data = [] } = useGetTricksQuery({});
+interface Props {
+  activePage: number;
+}
+
+const Home = ({ activePage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const router = useRouter();
+  const take = 10;
+  const { isLoading, isFetching, data = { records: [], count: 0 } } = useGetTricksQuery({
+    take,
+    skip: (activePage - 1) * take,
+  });
+
+  const changePage = useCallback((nextPage: number) => {
+    router.query.page = String(nextPage);
+    router.push(router);
+  }, [router]);
 
   return (
     <div>
@@ -21,7 +38,7 @@ const Home: NextPage = () => {
         <div className="max-w-screen-md mx-auto my-4">
           <CodeEditor />
           {
-            isLoading ? <Card className="mt-4" title="Loading..." /> : data.map((p) => (
+            isFetching ? <Card className="mt-4" title="Loading..." /> : data.records.map((p) => (
               <Card
                 key={p.id}
                 className="mt-4 overflow-hidden"
@@ -51,10 +68,27 @@ const Home: NextPage = () => {
               </Card>
             ))
           }
+          {
+            !isLoading && (
+              <div className="flex justify-center mt-8">
+                <Pagination
+                  totalPages={Math.ceil(data.count / take)}
+                  onChange={changePage}
+                  defaultActivePage={activePage}
+                />
+              </div>
+            )
+          }
         </div>
       </main>
     </div>
   );
 };
+
+export const getServerSideProps: GetServerSideProps<Props> = async (context) => ({
+  props: {
+    activePage: Number(context.query.page) || 1,
+  },
+});
 
 export default Home;

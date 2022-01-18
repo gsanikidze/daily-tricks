@@ -15,6 +15,7 @@
     "react/jsx-props-no-spreading": 1,
     "no-param-reassign": 0,
     "import/prefer-default-export": 0,
-    "no-restricted-syntax": 0
+    "no-restricted-syntax": 0,
+    "react/no-array-index-key": 0
   }
 }

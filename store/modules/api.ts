@@ -38,9 +38,9 @@ const api = createApi({
   }),
   tagTypes: ['Post'],
   endpoints: (build) => ({
-    getTricks: build.query<Post[], { take?: number, skip?: number }>({
+    getTricks: build.query<{ records: Post[], count: number }, { take?: number, skip?: number }>({
       query: (q) => ({ url: `tricks?${queryObjToSt(q)}` }),
-      transformResponse: (response: { data: Post[] }) => response.data,
+      transformResponse: (response: { data: { records: Post[], count: number } }) => response.data,
       providesTags: ['Post'],
     }),
     addTrick: build.mutation<Post, CreatePost>({
