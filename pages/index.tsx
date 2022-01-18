@@ -46,8 +46,8 @@ const Home = ({ activePage }: InferGetServerSidePropsType<typeof getServerSidePr
                 addonBefore={(
                   <div className="flex justify-between items-center">
                     <UserAvatar
-                      name={p.user.displayName || ''}
-                      alt={p.user.displayName || ''}
+                      name={p.user.displayName || p.user.email || ''}
+                      alt={p.user.displayName || p.user.email || ''}
                       photoURL={p.user.photoURL}
                     />
                     <div className="flex items-center space-x-4">
