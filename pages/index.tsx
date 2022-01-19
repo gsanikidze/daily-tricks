@@ -26,6 +26,7 @@ const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSid
     skip: (activePage - 1) * take,
     q,
   });
+  const totalPages = Math.ceil(data.count / take);
 
   const changePage = useCallback((nextPage: number) => {
     router.query.page = String(nextPage);
@@ -79,10 +80,10 @@ const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSid
             ))
           }
           {
-            !isLoading && (
+            !isLoading && totalPages > 1 && (
               <div className="flex justify-center mt-8">
                 <Pagination
-                  totalPages={Math.ceil(data.count / take)}
+                  totalPages={totalPages}
                   onChange={changePage}
                   defaultActivePage={activePage}
                 />

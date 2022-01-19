@@ -39,6 +39,18 @@ export default async function handler(
       res.status(201).json({ message: 'Trick created' });
     }
   } else if (req.method === 'GET') {
+    const where: Record<string, any> = {};
+    const { q } = req.query;
+
+    if (q) {
+      const $regex = new RegExp(req.query.q as string, 'i');
+
+      where.$or = [
+        { title: { $regex } },
+        { language: { $regex } },
+      ];
+    }
+
     const [records, count] = await connection.manager.findAndCount(
       Trick,
       {
@@ -47,6 +59,7 @@ export default async function handler(
         order: {
           createdAt: 'DESC',
         },
+        where,
       },
     );
     const populatedRecords = [];
