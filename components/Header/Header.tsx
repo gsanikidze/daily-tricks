@@ -5,6 +5,7 @@ import Button from '../Button';
 import useAuth from '../../hooks/useAuth';
 import { useAppSelector } from '../../store';
 import UserAvatar from '../UserAvatar';
+import SearchBox from '../SearchBox';
 
 export default function Header() {
   const { isAuthorized, authWithGithub, logOut } = useAuth();
@@ -18,7 +19,9 @@ export default function Header() {
         <h5>
           Daily Tricks
         </h5>
-        {
+        <div className="flex items-center space-x-4">
+          <SearchBox />
+          {
           isAuthorized ? (
             <div className="flex items-center space-x-4">
               <UserAvatar
@@ -40,6 +43,7 @@ export default function Header() {
             </Button>
           )
         }
+        </div>
       </div>
     </header>
   );

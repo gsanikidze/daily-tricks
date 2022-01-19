@@ -29,6 +29,10 @@ export default function Pagination({
     }
   };
 
+  useEffect(() => {
+    setActivePage(defaultActivePage);
+  }, [defaultActivePage]);
+
   const renderPage = useCallback((page: number) => (
     <button
       key={`pagination-${page}`}

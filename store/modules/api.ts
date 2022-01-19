@@ -25,6 +25,7 @@ interface UpdatePost {
 }
 
 const queryObjToSt = (obj: Record<string, string | number>) => Object.entries(obj)
+  .filter((tuple) => !!tuple[1])
   .map(([key, value]) => `${key}=${value}`)
   .join('&');
 
@@ -43,7 +44,11 @@ const api = createApi({
   }),
   tagTypes: ['Post'],
   endpoints: (build) => ({
-    getTricks: build.query<{ records: Post[], count: number }, { take?: number, skip?: number }>({
+    getTricks: build.query<{ records: Post[], count: number }, {
+      take?: number,
+      skip?: number,
+      q?: string
+    }>({
       query: (q) => ({ url: `tricks?${queryObjToSt(q)}` }),
       transformResponse: (response: { data: { records: Post[], count: number } }) => response.data,
       providesTags: ['Post'],

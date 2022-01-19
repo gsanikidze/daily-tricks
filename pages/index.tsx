@@ -14,15 +14,17 @@ import { useAppSelector } from '../store';
 
 interface Props {
   activePage: number;
+  q: string;
 }
 
-const Home = ({ activePage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const user = useAppSelector((st) => st.user);
   const router = useRouter();
   const take = 10;
   const { isLoading, isFetching, data = { records: [], count: 0 } } = useGetTricksQuery({
     take,
     skip: (activePage - 1) * take,
+    q,
   });
 
   const changePage = useCallback((nextPage: number) => {
@@ -96,6 +98,7 @@ const Home = ({ activePage }: InferGetServerSidePropsType<typeof getServerSidePr
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => ({
   props: {
     activePage: Number(context.query.page) || 1,
+    q: context.query.q ? String(context.query.q) : '',
   },
 });
 
