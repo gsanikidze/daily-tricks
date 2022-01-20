@@ -41,6 +41,17 @@ export default async function handler(
         res.status(201).json({ message: 'Trick updated' });
       }
     }
+  } else if (req.method === 'DELETE') {
+    const trick = await connection.manager.findOne(Trick, id as string);
+    const userId = await authMiddleware(req, res) as string;
+    if (!trick) {
+      res.status(404).json({ message: 'Trick is undefined' });
+    } else if (userId === trick?.userId) {
+      await connection.manager.delete(Trick, trick);
+      res.status(200).json({ message: 'Trick deleted' });
+    } else {
+      res.status(403).json({ message: 'Forbidden' });
+    }
   } else {
     res.status(405).json({ message: 'Method not allowed' });
   }
