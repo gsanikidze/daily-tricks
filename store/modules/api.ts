@@ -69,10 +69,21 @@ const api = createApi({
         body,
       }),
       transformResponse: (response: { data: Post }) => response.data,
+    }),
+    deleteTrick: build.mutation<Post, string>({
+      query: (id: string) => ({
+        method: 'DELETE',
+        url: `tricks/${id}`,
+      }),
       invalidatesTags: ['Post'],
     }),
   }),
 });
 
-export const { useGetTricksQuery, useAddTrickMutation, useEditTrickMutation } = api;
+export const {
+  useGetTricksQuery,
+  useAddTrickMutation,
+  useEditTrickMutation,
+  useDeleteTrickMutation,
+} = api;
 export default api;

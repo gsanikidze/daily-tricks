@@ -6,11 +6,12 @@ import { useCallback } from 'react';
 import CodeEditor from '../components/CodeEditor';
 import CodeBlock from '../components/CodeBlock';
 import Card from '../components/Card';
+import Button from '../components/Button';
 import Tag from '../components/Tag';
 import UserAvatar from '../components/UserAvatar';
-import { useGetTricksQuery } from '../store/modules/api';
 import Pagination from '../components/Pagination';
 import { useAppSelector } from '../store';
+import { useGetTricksQuery, useDeleteTrickMutation } from '../store/modules/api';
 
 interface Props {
   activePage: number;
@@ -32,6 +33,11 @@ const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSid
     router.query.page = String(nextPage);
     router.push(router);
   }, [router]);
+  const [deleteTrick] = useDeleteTrickMutation();
+
+  const onDelete = (id: string) => {
+    deleteTrick(id);
+  };
 
   return (
     <div>
@@ -62,6 +68,13 @@ const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSid
                       <Tag>
                         {p.language}
                       </Tag>
+                      {
+                        user.isAuthorized && p.user.uid === user.profile.uid && (
+                          <Button onClick={() => onDelete(p.id)} type="secondary" size="sm">
+                            Delete
+                          </Button>
+                        )
+                      }
                     </div>
                   </div>
                 )}

@@ -3,7 +3,7 @@ import classnames from 'classnames';
 
 interface Props {
   children: string | JSX.Element;
-  type?: 'primary' | 'secondary' | 'default';
+  type?: 'primary' | 'secondary' | 'default' | 'warning';
   size?: 'default' | 'sm';
   onClick?: () => void;
   beforeAddon?: JSX.Element;
@@ -23,6 +23,7 @@ export default function Button({
         'bg-blue-600 hover:bg-blue-500 focus:ring-blue-300': type === 'primary',
         'bg-pink-600 hover:bg-pink-500 focus:ring-pink-300': type === 'secondary',
         'bg-gray-600 hover:bg-gray-500 focus:ring-gray-300': type === 'default',
+        'bg-red-600 hover:bg-red-500 focus:ring-red-300': type === 'warning',
         'px-4 py-2 rounded-md': size === 'default',
         'px-2 py-1 text-sm rounded': size === 'sm',
       },
