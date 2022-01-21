@@ -2,10 +2,8 @@ import 'reflect-metadata';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { validate } from 'class-validator';
 
-import dbConnectionMiddleware from '../../apiMiddleware/dbConnectionMiddleware';
-import authMiddleware from '../../apiMiddleware/authMiddleware';
 import { Trick } from '../../db';
-import populateUserMiddleware from '../../apiMiddleware/populateUserMiddleware';
+import { dbConnection, auth, getFbUser } from '../../apiUtils';
 
 type Data = {
   message: string;
@@ -17,10 +15,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
 ) {
-  const connection = await dbConnectionMiddleware();
+  const connection = await dbConnection();
 
   if (req.method === 'POST') {
-    const userId = await authMiddleware(req, res) as string;
+    const userId = await auth(req, res) as string;
 
     const trick = new Trick();
     trick.value = req.body.value;
@@ -67,7 +65,7 @@ export default async function handler(
 
     for await (const record of records) {
       if (!users[record.userId]) {
-        users[record.userId] = await populateUserMiddleware(record.userId);
+        users[record.userId] = await getFbUser(record.userId);
       }
 
       populatedRecords.push({

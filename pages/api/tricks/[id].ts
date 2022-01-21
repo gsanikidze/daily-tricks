@@ -1,8 +1,7 @@
 import { validate } from 'class-validator';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import authMiddleware from '../../../apiMiddleware/authMiddleware';
-import dbConnectionMiddleware from '../../../apiMiddleware/dbConnectionMiddleware';
+import { auth, dbConnection } from '../../../apiUtils';
 import { Trick } from '../../../db';
 
 type Data = {
@@ -16,11 +15,11 @@ export default async function handler(
   res: NextApiResponse<Data>,
 ) {
   const { id } = req.query;
-  const connection = await dbConnectionMiddleware();
+  const connection = await dbConnection();
 
   if (req.method === 'PUT') {
     const trick = await connection.manager.findOne(Trick, id as string);
-    const userId = await authMiddleware(req, res) as string;
+    const userId = await auth(req, res) as string;
 
     if (!trick) {
       res.status(404).json({ message: 'Trick is undefined' });
@@ -43,7 +42,7 @@ export default async function handler(
     }
   } else if (req.method === 'DELETE') {
     const trick = await connection.manager.findOne(Trick, id as string);
-    const userId = await authMiddleware(req, res) as string;
+    const userId = await auth(req, res) as string;
     if (!trick) {
       res.status(404).json({ message: 'Trick is undefined' });
     } else if (userId === trick?.userId) {

@@ -3,7 +3,7 @@ import { getConnection, createConnection } from 'typeorm';
 
 import { mongoDbConfig } from '../constants';
 
-const dbConnectionMiddleware = async () => {
+export default async function dbConnection() {
   if (process.env.NODE_ENV === 'production') {
     try {
       return getConnection();
@@ -18,6 +18,4 @@ const dbConnectionMiddleware = async () => {
       return await createConnection(mongoDbConfig);
     }
   }
-};
-
-export default dbConnectionMiddleware;
+}

@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from 'firebase-admin/auth';
 
-import firebaseMiddleware from './firebaseMiddleware';
+import { initFb } from './fb';
 
-const authMiddleware = async (
+export default async function authMid(
   req: NextApiRequest,
   res: NextApiResponse,
-) => {
+) {
   const { authorization } = req.headers;
-  firebaseMiddleware();
+  initFb();
 
   if (!authorization) {
     return res.status(401).json({ message: 'Unauthorized' });
@@ -23,6 +23,4 @@ const authMiddleware = async (
   } catch (e) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
-};
-
-export default authMiddleware;
+}
