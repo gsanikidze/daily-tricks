@@ -14,7 +14,7 @@ type Data = {
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>,
-) {
+): Promise<void> {
   const connection = await dbConnection();
 
   if (req.method === 'POST') {
