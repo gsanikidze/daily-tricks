@@ -2,8 +2,8 @@ import 'reflect-metadata';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { validate } from 'class-validator';
 
-import { Trick } from '../../db';
-import { dbConnection, auth, getFbUser } from '../../apiUtils';
+import { Trick } from '../../../db';
+import { dbConnection, auth, getFbUser } from '../../../apiUtils';
 
 type Data = {
   message: string;
