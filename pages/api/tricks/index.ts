@@ -28,12 +28,12 @@ const addTrick: Route<[
     const errors = await validate(trick);
 
     if (errors.length > 0) {
-      res.status(422).json({ message: 'Invalid Trick', errors });
-    } else {
-      await connection.manager.save(trick);
-
-      res.status(201).json({ message: 'Trick created' });
+      return [422, errors];
     }
+
+    await connection.manager.save(trick);
+
+    return [201];
   },
 };
 
@@ -85,7 +85,7 @@ const getTricks: Route<[
       });
     }
 
-    res.status(200).json({ message: 'Tricks found', data: { records: populatedRecords, count } });
+    return [200, { records: populatedRecords, count }];
   },
 };
 
