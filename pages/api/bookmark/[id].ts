@@ -49,4 +49,35 @@ const addBookmark: Route<[
   },
 };
 
-export default router([addBookmark]);
+const deleteBookmark: Route<[
+  ThenType<typeof dbConnection>,
+  ThenType<typeof auth>,
+]> = {
+  matches: (req) => req.method === 'DELETE',
+  middleware: [dbConnection, auth],
+  handler: async (
+    req,
+    res,
+    middleware,
+  ) => {
+    const [connection, userId] = middleware;
+    const { id } = req.query;
+    const user = await connection.manager.findOne(User, { where: { fbId: userId as string } });
+
+    if (!user) {
+      return [404];
+    }
+
+    if (!id) {
+      return [422];
+    }
+
+    user.bookmarkedTricks = user.bookmarkedTricks.filter((b) => b !== id);
+
+    await connection.manager.save(user);
+
+    return [200];
+  },
+};
+
+export default router([addBookmark, deleteBookmark]);
