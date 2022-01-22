@@ -64,7 +64,7 @@ export default function CodeEditor({
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
     setLanguages(monaco.languages.getLanguages()
-      .map((i) => ({ value: i.id, label: i.id })));
+      .map((i: { id: string }) => ({ value: i.id, label: i.id })));
   };
 
   const changeLanguage = (option: SingleValue<Option>) => {
