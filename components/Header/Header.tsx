@@ -6,7 +6,7 @@ import useAuth from '../../hooks/useAuth';
 import { useAppSelector } from '../../store';
 import UserAvatar from '../UserAvatar';
 import SearchBox from '../SearchBox';
-import Navigation from '../Navigation';
+// import Navigation from '../Navigation';
 
 export default function Header() {
   const { isAuthorized, authWithGithub, logOut } = useAuth();
@@ -21,12 +21,12 @@ export default function Header() {
           <h5>
             Daily Tricks
           </h5>
-          <Navigation
+          {/* <Navigation
             navItems={[
               { href: '/', text: 'Feed' },
               { href: '/bookmarks', text: 'Bookmarks' },
             ]}
-          />
+          /> */}
         </div>
         <div className="flex items-center space-x-4">
           <SearchBox />
