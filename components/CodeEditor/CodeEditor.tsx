@@ -22,6 +22,7 @@ interface Props {
   id?: string;
   code?: string;
   language?: string;
+  afterPublish?: () => void;
 }
 
 export default function CodeEditor({
@@ -31,6 +32,7 @@ export default function CodeEditor({
   id,
   code,
   language,
+  afterPublish,
 }: Props) {
   const editorRef = useRef<any>(null);
   const [addTrick] = useAddTrickMutation();
@@ -97,6 +99,10 @@ export default function CodeEditor({
 
     setIsEditorOpen(false);
     setTitle('');
+
+    if (afterPublish) {
+      afterPublish();
+    }
   };
 
   const onTitleChange = (value: string) => {
@@ -168,4 +174,5 @@ CodeEditor.defaultProps = {
   id: null,
   code: null,
   language: null,
+  afterPublish: null,
 };

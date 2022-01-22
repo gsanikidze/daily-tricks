@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Copy, Edit } from 'react-feather';
 import { useDispatch } from 'react-redux';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -23,13 +23,13 @@ export default function CodeBlock({
   const dispatch = useDispatch();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
 
-  const copyToClipboard = () => {
+  const copyToClipboard = useCallback(() => {
     window.navigator.clipboard.writeText(children);
     dispatch(displayAlert({
       title: 'Code copied on clipboard',
       type: 'success',
     }));
-  };
+  }, [children, dispatch]);
 
   return (
     <>
@@ -67,6 +67,7 @@ export default function CodeBlock({
           defaultTitle={title}
           code={children}
           language={language}
+          afterPublish={() => setIsEditorOpen(false)}
         />
       </Modal>
     </>

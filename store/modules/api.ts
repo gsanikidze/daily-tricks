@@ -33,10 +33,10 @@ const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
     prepareHeaders: (headers, { getState }) => {
-      const { user: { profile: { accessToken } } } = getState() as AppState;
+      const { user: { profile: { tokenManager } } } = getState() as AppState;
 
-      if (accessToken) {
-        headers.set('authorization', `Bearer ${accessToken}`);
+      if (tokenManager && tokenManager.accessToken) {
+        headers.set('authorization', `Bearer ${tokenManager.accessToken}`);
       }
 
       return headers;
