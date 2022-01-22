@@ -2,14 +2,13 @@ import admin from 'firebase-admin';
 import { getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 
-const serviceAccount = require('../firebase-adminsdk.json');
-
 export async function initFb() {
   const apps = getApps();
+  const serviceKey = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string) as string;
 
   if (apps.length === 0) {
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+      credential: admin.credential.cert(serviceKey),
     });
   }
 }
