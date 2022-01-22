@@ -1,27 +1,27 @@
 import {
-  getAuth, GithubAuthProvider, signInWithPopup, getIdToken,
+  getAuth, GithubAuthProvider, signInWithPopup,
 } from 'firebase/auth';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../store';
+import { useCallback, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../store';
 import { getStoredUser, logIn, logOut as logOutAction } from '../store/modules/user';
 
 const useAuth = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isAuthorized = useAppSelector((st) => st.user.isAuthorized);
+  const auth = getAuth();
+  const user = useAppSelector((st) => st.user);
 
-  const authWithGithub = async () => {
+  const authWithGithub = useCallback(async () => {
     const provider = new GithubAuthProvider();
-    const auth = getAuth();
 
     try {
       const res = await signInWithPopup(auth, provider);
-      const credential = await getIdToken(res.user);
+      const userJson = res.user.toJSON() as any;
 
-      if (credential) {
+      if (userJson.stsTokenManager.accessToken) {
         dispatch(logIn({
           uid: res.user.uid,
-          accessToken: credential,
+          tokenManager: userJson.stsTokenManager,
           displayName: res.user.displayName,
           email: res.user.email,
           photoURL: res.user.photoURL,
@@ -30,15 +30,26 @@ const useAuth = () => {
     } catch (e) {
       console.log(e);
     }
-  };
+  }, [auth, dispatch]);
 
-  const logOut = () => {
+  const logOut = useCallback(async () => {
     dispatch(logOutAction());
-  };
+    auth.signOut();
+  }, [auth, dispatch]);
 
   useEffect(() => {
     dispatch(getStoredUser({}));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user.isAuthorized && user.profile.tokenManager) {
+      const isTokenExpired = user.profile.tokenManager.expirationTime - Date.now() <= 0;
+
+      if (isTokenExpired) {
+        logOut();
+      }
+    }
+  }, [logOut, user.isAuthorized, user.profile.tokenManager]);
 
   return {
     isAuthorized,

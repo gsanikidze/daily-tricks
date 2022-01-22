@@ -2,7 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface User {
   uid?: string;
-  accessToken?: string | undefined;
+  tokenManager?: {
+    accessToken: string;
+    expirationTime: number;
+    refreshToken: string;
+  };
   displayName?: string | null;
   email?: string | null;
   photoURL?: string | null;
@@ -30,7 +34,7 @@ const userSlice = createSlice({
     },
     getStoredUser: (state, action: PayloadAction<User>) => {
       state.profile = action.payload;
-      state.isAuthorized = !!action.payload.accessToken;
+      state.isAuthorized = !!action.payload.tokenManager?.accessToken;
     },
   },
 });
