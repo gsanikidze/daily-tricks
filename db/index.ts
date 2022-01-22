@@ -1,4 +1,5 @@
 import Trick from './entity/Trick';
+import User from './entity/User';
 
-export { Trick };
-export default [Trick];
+export { Trick, User };
+export default [Trick, User];
