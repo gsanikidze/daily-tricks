@@ -63,7 +63,7 @@ export function router(routes: Route<any[]>[]) {
 
       return response;
     } catch (e) {
-      return res.status(500).send({ message: 'Oops, Something went wrong.', errors: [e] });
+      return res.status(500).send({ message: responseMessages[500], errors: [e] });
     }
   };
 }
