@@ -1,30 +1,28 @@
 import 'reflect-metadata';
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { validate } from 'class-validator';
 
 import { Trick } from '../../../db';
-import { dbConnection, auth, getFbUser } from '../../../apiUtils';
+import {
+  dbConnection, auth, getFbUser, router, Route, ThenType,
+} from '../../../apiUtils';
 
-type Data = {
-  message: string;
-  errors?: any[];
-  data?: Record<string, any>;
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>,
-): Promise<void> {
-  const connection = await dbConnection();
-
-  if (req.method === 'POST') {
-    const userId = await auth(req, res) as string;
-
+const addTrick: Route<[
+  ThenType<typeof dbConnection>,
+  ThenType<typeof auth>,
+]> = {
+  matches: (req) => req.method === 'POST',
+  middleware: [dbConnection, auth],
+  handler: async (
+    req,
+    res,
+    middleware,
+  ) => {
+    const [connection, userId] = middleware;
     const trick = new Trick();
     trick.value = req.body.value;
     trick.title = req.body.title;
     trick.language = req.body.language;
-    trick.userId = userId;
+    trick.userId = userId as string;
     trick.createdAt = Date.now();
 
     const errors = await validate(trick);
@@ -36,12 +34,25 @@ export default async function handler(
 
       res.status(201).json({ message: 'Trick created' });
     }
-  } else if (req.method === 'GET') {
+  },
+};
+
+const getTricks: Route<[
+  ThenType<typeof dbConnection>,
+]> = {
+  matches: (req) => req.method === 'GET',
+  middleware: [dbConnection],
+  handler: async (
+    req,
+    res,
+    middleware,
+  ) => {
+    const [connection] = middleware;
     const where: Record<string, any> = {};
-    const { q } = req.query;
+    const { q, skip, take } = req.query;
 
     if (q) {
-      const $regex = new RegExp(req.query.q as string, 'i');
+      const $regex = new RegExp(q as string, 'i');
 
       where.$or = [
         { title: { $regex } },
@@ -52,8 +63,8 @@ export default async function handler(
     const [records, count] = await connection.manager.findAndCount(
       Trick,
       {
-        skip: Number(req.query.skip) || 0,
-        take: Number(req.query.take) || 10,
+        skip: Number(skip) || 0,
+        take: Number(take) || 10,
         order: {
           createdAt: 'DESC',
         },
@@ -75,7 +86,7 @@ export default async function handler(
     }
 
     res.status(200).json({ message: 'Tricks found', data: { records: populatedRecords, count } });
-  } else {
-    res.status(405).json({ message: 'Method not allowed' });
-  }
-}
+  },
+};
+
+export default router([getTricks, addTrick]);

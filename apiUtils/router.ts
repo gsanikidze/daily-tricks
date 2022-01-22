@@ -1,9 +1,4 @@
-import { validate } from 'class-validator';
 import { NextApiRequest, NextApiResponse } from 'next';
-
-import { Trick } from '../db';
-import auth from './auth';
-import dbConnection from './dbConnection';
 
 type Data = {
   message: string;
@@ -11,10 +6,10 @@ type Data = {
   data?: Record<string, any>;
 };
 
-type ThenType<T extends (...a: any) => any> = T extends (...a: any) => Promise<infer U> ? U
+export type ThenType<T extends (...a: any) => any> = T extends (...a: any) => Promise<infer U> ? U
   : T extends (...a: any) => infer U ? U : any;
 
-abstract class Route<T> {
+export abstract class Route<T> {
   public matches: (req: NextApiRequest) => boolean;
 
   public middleware: ((req: NextApiRequest, res: NextApiResponse<Data>) => Promise<any>)[];
@@ -26,33 +21,20 @@ abstract class Route<T> {
   ) => Promise<void>;
 }
 
-export const getTricksRoute: Route<[
-  ThenType<typeof dbConnection>,
-  ThenType<typeof auth>,
-]> = {
-  matches: (req) => req.method === 'GET',
-  middleware: [dbConnection, auth],
-  handler: async (
-    req,
-    res,
-    middleware,
-  ) => {
-    const [connection, userId] = middleware;
-    const trick = new Trick();
-    trick.value = req.body.value;
-    trick.title = req.body.title;
-    trick.language = req.body.language;
-    trick.userId = userId as string;
-    trick.createdAt = Date.now();
+export function router(routes: Route<any[]>[]) {
+  return async function routeHandler(req: NextApiRequest, res: NextApiResponse<Data>) {
+    try {
+      const matchedRoute = routes.find((route) => route.matches(req));
 
-    const errors = await validate(trick);
+      if (!matchedRoute) {
+        res.status(404).json({ message: 'Route is undefined' });
+      } else {
+        const middlewareRes = await Promise.all(matchedRoute.middleware.map((md) => md(req, res)));
 
-    if (errors.length > 0) {
-      res.status(422).json({ message: 'Invalid Trick', errors });
-    } else {
-      await connection.manager.save(trick);
-
-      res.status(201).json({ message: 'Trick created' });
+        await matchedRoute.handler(req, res, middlewareRes);
+      }
+    } catch (e) {
+      res.status(500).send({ message: 'Oops, Something went wrong.', errors: [e] });
     }
-  },
-};
+  };
+}
