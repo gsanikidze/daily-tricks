@@ -1,25 +1,24 @@
 import { validate } from 'class-validator';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { auth, dbConnection } from '../../../apiUtils';
+import {
+  auth, dbConnection, Route, router, ThenType,
+} from '../../../apiUtils';
 import { Trick } from '../../../db';
 
-type Data = {
-  message: string;
-  errors?: any[];
-  data?: Record<string, any>;
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>,
-) {
-  const { id } = req.query;
-  const connection = await dbConnection();
-
-  if (req.method === 'PUT') {
+const editTrick: Route<[
+  ThenType<typeof dbConnection>,
+  ThenType<typeof auth>,
+]> = {
+  matches: (req) => req.method === 'PUT',
+  middleware: [dbConnection, auth],
+  handler: async (
+    req,
+    res,
+    middleware,
+  ) => {
+    const { id } = req.query;
+    const [connection, userId] = middleware;
     const trick = await connection.manager.findOne(Trick, id as string);
-    const userId = await auth(req, res) as string;
 
     if (!trick) {
       res.status(404).json({ message: 'Trick is undefined' });
@@ -40,9 +39,23 @@ export default async function handler(
         res.status(201).json({ message: 'Trick updated' });
       }
     }
-  } else if (req.method === 'DELETE') {
+  },
+};
+
+const deleteTrick: Route<[
+  ThenType<typeof dbConnection>,
+  ThenType<typeof auth>,
+]> = {
+  matches: (req) => req.method === 'DELETE',
+  middleware: [dbConnection, auth],
+  handler: async (
+    req,
+    res,
+    middleware,
+  ) => {
+    const { id } = req.query;
+    const [connection, userId] = middleware;
     const trick = await connection.manager.findOne(Trick, id as string);
-    const userId = await auth(req, res) as string;
     if (!trick) {
       res.status(404).json({ message: 'Trick is undefined' });
     } else if (userId === trick?.userId) {
@@ -51,7 +64,7 @@ export default async function handler(
     } else {
       res.status(403).json({ message: 'Forbidden' });
     }
-  } else {
-    res.status(405).json({ message: 'Method not allowed' });
-  }
-}
+  },
+};
+
+export default router([editTrick, deleteTrick]);
