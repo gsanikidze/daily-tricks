@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { Copy, Edit } from 'react-feather';
+import { Copy, Edit, Trash } from 'react-feather';
 import { useDispatch } from 'react-redux';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import vs2015 from 'react-syntax-highlighter/dist/cjs/styles/hljs/vs2015';
 
+import { useDeleteTrickMutation } from '../../store/modules/api';
 import { displayAlert } from '../../store/modules/layout';
 import CodeEditor from '../CodeEditor';
 import Modal from '../Modal';
@@ -15,13 +16,19 @@ interface Props {
   title: string;
   id: string;
   className?: string;
+  canDelete: boolean;
 }
 
 export default function CodeBlock({
-  children, language, className, canEdit, title, id,
+  children, language, className, canEdit, title, id, canDelete,
 }: Props) {
   const dispatch = useDispatch();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [deleteTrick] = useDeleteTrickMutation();
+
+  const onDelete = () => {
+    deleteTrick(id);
+  };
 
   const copyToClipboard = useCallback(() => {
     window.navigator.clipboard.writeText(children);
@@ -35,6 +42,16 @@ export default function CodeBlock({
     <>
       <div className={`relative ${className}`}>
         <span className="absolute right-4 top-3 flex space-x-4">
+          {
+            canDelete && (
+              <Trash
+                color="white"
+                size={16}
+                className="cursor-pointer"
+                onClick={onDelete}
+              />
+            )
+          }
           <Copy
             color="white"
             size={16}
