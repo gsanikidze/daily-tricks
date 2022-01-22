@@ -4,7 +4,7 @@ import { getAuth } from 'firebase-admin/auth';
 
 export async function initFb() {
   const apps = getApps();
-  const serviceKey = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string) as string;
+  const serviceKey = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string);
 
   if (apps.length === 0) {
     admin.initializeApp({
