@@ -18,12 +18,23 @@ const getBookmarks: Route<[
   ) => {
     const [connection, userId] = middleware;
     const user = await connection.manager.findOne(User, { where: { fbId: userId as string } });
+    const { skip, take } = req.query;
 
     if (!user) {
       return [404];
     }
 
-    const records = await connection.manager.findByIds(Trick, user.bookmarkedTricks);
+    const records = await connection.manager.findByIds(
+      Trick,
+      user.bookmarkedTricks,
+      {
+        skip: Number(skip) || 0,
+        take: Number(take) || 10,
+        order: {
+          createdAt: 'DESC',
+        },
+      },
+    );
     const populatedRecords = [];
     const users: Record<string, any> = {};
 
@@ -38,7 +49,7 @@ const getBookmarks: Route<[
       });
     }
 
-    return [200, populatedRecords];
+    return [200, { records: populatedRecords, count: user.bookmarkedTricks.length }];
   },
 };
 

@@ -36,7 +36,7 @@ const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSid
   return (
     <div>
       <Head>
-        <title>Daily Tricks</title>
+        <title>Feed | Daily Tricks</title>
         <meta name="description" content="Daily Tricks" />
       </Head>
       <main>

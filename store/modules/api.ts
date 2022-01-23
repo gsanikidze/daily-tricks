@@ -42,7 +42,7 @@ const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Post'],
+  tagTypes: ['Post', 'Bookmark'],
   endpoints: (build) => ({
     getTricks: build.query<{ records: Trick[], count: number }, {
       take?: number,
@@ -95,6 +95,15 @@ const api = createApi({
       }),
       transformResponse: (response: { data: string[] }) => response.data,
     }),
+    getBookmarkedTricks: build.query<{ records: Trick[], count: number }, {
+      take?: number,
+      skip?: number,
+      q?: string
+    }>({
+      query: (q) => ({ url: `bookmark?${queryObjToSt(q)}` }),
+      transformResponse: (response: { data: { records: Trick[], count: number } }) => response.data,
+      providesTags: ['Bookmark'],
+    }),
   }),
 });
 
@@ -106,5 +115,6 @@ export const {
   useBookmarkTrickMutation,
   useDeleteBookmarkTrickMutation,
   useGetBookmarkIdsQuery,
+  useGetBookmarkedTricksQuery,
 } = api;
 export default api;
