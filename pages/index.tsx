@@ -10,7 +10,7 @@ import Tag from '../components/Tag';
 import UserAvatar from '../components/UserAvatar';
 import Pagination from '../components/Pagination';
 import { useAppSelector } from '../store';
-import { useGetTricksQuery } from '../store/modules/api';
+import { useGetTricksQuery, useGetBookmarkIdsQuery } from '../store/modules/api';
 
 interface Props {
   activePage: number;
@@ -21,6 +21,7 @@ const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSid
   const user = useAppSelector((st) => st.user);
   const router = useRouter();
   const take = 10;
+  const bookmarks = useGetBookmarkIdsQuery(user.profile?.uid || '').data || [];
   const { isLoading, isFetching, data = { records: [], count: 0 } } = useGetTricksQuery({
     take,
     skip: (activePage - 1) * take,
@@ -73,6 +74,7 @@ const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSid
                   canEdit={user.profile.uid === p.user.uid}
                   canDelete={user.isAuthorized && p.user.uid === user.profile.uid}
                   title={p.title}
+                  defaultBookmarked={bookmarks.includes(p.id)}
                 >
                   { p.value }
                 </CodeBlock>

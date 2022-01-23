@@ -77,6 +77,24 @@ const api = createApi({
       }),
       invalidatesTags: ['Post'],
     }),
+    bookmarkTrick: build.mutation<Post, string>({
+      query: (id: string) => ({
+        url: `bookmark/${id}`,
+        method: 'POST',
+      }),
+    }),
+    deleteBookmarkTrick: build.mutation<Post, string>({
+      query: (id: string) => ({
+        url: `bookmark/${id}`,
+        method: 'DELETE',
+      }),
+    }),
+    getBookmarkIds: build.query<string[], string>({
+      query: (userId: string) => ({
+        url: `bookmark/${userId}`,
+      }),
+      transformResponse: (response: { data: string[] }) => response.data,
+    }),
   }),
 });
 
@@ -85,5 +103,8 @@ export const {
   useAddTrickMutation,
   useEditTrickMutation,
   useDeleteTrickMutation,
+  useBookmarkTrickMutation,
+  useDeleteBookmarkTrickMutation,
+  useGetBookmarkIdsQuery,
 } = api;
 export default api;

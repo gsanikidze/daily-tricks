@@ -38,5 +38,5 @@ yarn-error.log*
 
 tmp/
 temp/
-.env.development
+.env
 firebase-adminsdk.json

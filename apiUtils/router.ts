@@ -9,10 +9,12 @@ type Data = {
 export type ThenType<T extends (...a: any) => any> = T extends (...a: any) => Promise<infer U> ? U
   : T extends (...a: any) => infer U ? U : any;
 
+type Middleware = (req: NextApiRequest, res: NextApiResponse<Data>) => Promise<any>;
+
 export abstract class Route<T> {
   public matches: (req: NextApiRequest) => boolean;
 
-  public middleware: ((req: NextApiRequest, res: NextApiResponse<Data>) => Promise<any>)[];
+  public middleware: (Middleware)[];
 
   public handler: (
     req: NextApiRequest,
@@ -30,6 +32,9 @@ const responseMessages: Record<number, string> = {
   403: 'Forbidden',
 };
 
+const middlewareCache: Record<string, { res: ThenType<Middleware>, setAt: number }> = {};
+const cacheTime = 10 * 60 * 1000;
+
 export function router(routes: Route<any[]>[]) {
   return async function routeHandler(
     req: NextApiRequest,
@@ -42,7 +47,18 @@ export function router(routes: Route<any[]>[]) {
         return res.status(404).json({ message: 'Route is undefined' });
       }
 
-      const middlewareRes = await Promise.all(matchedRoute.middleware.map((md) => md(req, res)));
+      const middlewareRes: ThenType<Middleware>[] = [];
+
+      for await (const md of matchedRoute.middleware) {
+        if (!middlewareCache[md.name] || Date.now() - middlewareCache[md.name].setAt >= cacheTime) {
+          middlewareCache[md.name] = {
+            res: await md(req, res),
+            setAt: Date.now(),
+          };
+        }
+
+        middlewareRes.push(middlewareCache[md.name].res);
+      }
 
       const response = await matchedRoute.handler(req, res, middlewareRes);
 
