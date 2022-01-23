@@ -4,13 +4,12 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
 import CodeEditor from '../components/CodeEditor';
-import CodeBlock from '../components/CodeBlock';
 import Card from '../components/Card';
-import Tag from '../components/Tag';
-import UserAvatar from '../components/UserAvatar';
 import Pagination from '../components/Pagination';
 import { useAppSelector } from '../store';
 import { useGetTricksQuery, useGetBookmarkIdsQuery } from '../store/modules/api';
+import TrickCard from '../components/TrickCard';
+import Spinner from '../components/Spinner';
 
 interface Props {
   activePage: number;
@@ -44,42 +43,9 @@ const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSid
         <div className="max-w-screen-md mx-auto my-4">
           <CodeEditor />
           {
-            isFetching ? <Card className="mt-4" title="Loading..." /> : data.records.map((p) => (
-              <Card
-                key={p.id}
-                className="mt-4 overflow-hidden"
-                title={p.title}
-                addonBefore={(
-                  <div className="flex justify-between items-center">
-                    <UserAvatar
-                      name={p.user.displayName || p.user.email || ''}
-                      alt={p.user.displayName || p.user.email || ''}
-                      photoURL={p.user.photoURL}
-                    />
-                    <div className="flex items-center space-x-4">
-                      <code className="text-sm">
-                        {new Date(p.createdAt).toLocaleDateString()}
-                      </code>
-                      <Tag>
-                        {p.language}
-                      </Tag>
-                    </div>
-                  </div>
-                )}
-              >
-                <CodeBlock
-                  key={p.id}
-                  id={p.id}
-                  language={p.language}
-                  canEdit={user.profile.uid === p.user.uid}
-                  canDelete={user.isAuthorized && p.user.uid === user.profile.uid}
-                  title={p.title}
-                  defaultBookmarked={bookmarks.includes(p.id)}
-                >
-                  { p.value }
-                </CodeBlock>
-              </Card>
-            ))
+            isFetching ? (
+              <Card className="mt-4 p-4 flex justify-center"><Spinner /></Card>
+            ) : data.records.map((p) => <TrickCard trick={p} bookmarks={bookmarks} />)
           }
           {
             !isLoading && totalPages > 1 && (

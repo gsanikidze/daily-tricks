@@ -4,7 +4,7 @@ import { User } from './user';
 
 const BASE_URL = '/api';
 
-interface Post {
+export interface Trick {
   id: string;
   value: string;
   language: string;
@@ -44,46 +44,46 @@ const api = createApi({
   }),
   tagTypes: ['Post'],
   endpoints: (build) => ({
-    getTricks: build.query<{ records: Post[], count: number }, {
+    getTricks: build.query<{ records: Trick[], count: number }, {
       take?: number,
       skip?: number,
       q?: string
     }>({
       query: (q) => ({ url: `tricks?${queryObjToSt(q)}` }),
-      transformResponse: (response: { data: { records: Post[], count: number } }) => response.data,
+      transformResponse: (response: { data: { records: Trick[], count: number } }) => response.data,
       providesTags: ['Post'],
     }),
-    addTrick: build.mutation<Post, CreatePost>({
+    addTrick: build.mutation<Trick, CreatePost>({
       query: (body) => ({
         url: 'tricks',
         method: 'POST',
         body,
       }),
-      transformResponse: (response: { data: Post }) => response.data,
+      transformResponse: (response: { data: Trick }) => response.data,
       invalidatesTags: ['Post'],
     }),
-    editTrick: build.mutation<Post, { id: string, body: UpdatePost }>({
+    editTrick: build.mutation<Trick, { id: string, body: UpdatePost }>({
       query: ({ id, body }) => ({
         url: `tricks/${id}`,
         method: 'PUT',
         body,
       }),
-      transformResponse: (response: { data: Post }) => response.data,
+      transformResponse: (response: { data: Trick }) => response.data,
     }),
-    deleteTrick: build.mutation<Post, string>({
+    deleteTrick: build.mutation<Trick, string>({
       query: (id: string) => ({
         method: 'DELETE',
         url: `tricks/${id}`,
       }),
       invalidatesTags: ['Post'],
     }),
-    bookmarkTrick: build.mutation<Post, string>({
+    bookmarkTrick: build.mutation<Trick, string>({
       query: (id: string) => ({
         url: `bookmark/${id}`,
         method: 'POST',
       }),
     }),
-    deleteBookmarkTrick: build.mutation<Post, string>({
+    deleteBookmarkTrick: build.mutation<Trick, string>({
       query: (id: string) => ({
         url: `bookmark/${id}`,
         method: 'DELETE',
