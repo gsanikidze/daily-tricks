@@ -8,6 +8,7 @@ import Pagination from '../components/Pagination';
 import { useGetBookmarkedTricksQuery } from '../store/modules/api';
 import TrickCard from '../components/TrickCard';
 import Spinner from '../components/Spinner';
+import { useAppSelector } from '../store';
 
 interface Props {
   activePage: number;
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const Bookmarks = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const isAuthorized = useAppSelector((st) => st.user.isAuthorized);
   const router = useRouter();
   const take = 10;
   const { isLoading, isFetching, data = { records: [], count: 0 } } = useGetBookmarkedTricksQuery({
@@ -38,20 +40,26 @@ const Bookmarks = ({ activePage, q }: InferGetServerSidePropsType<typeof getServ
       <main>
         <div className="max-w-screen-md mx-auto my-4">
           {
-            isFetching ? (
-              <Card className="mt-4 p-4 flex justify-center"><Spinner /></Card>
-            ) : data.records.map((p) => <TrickCard trick={p} bookmarks={trickIds} />)
-          }
-          {
-            !isLoading && totalPages > 1 && (
-              <div className="flex justify-center mt-8">
-                <Pagination
-                  totalPages={totalPages}
-                  onChange={changePage}
-                  defaultActivePage={activePage}
-                />
-              </div>
-            )
+            isAuthorized ? (
+              <>
+                {
+                  isFetching ? (
+                    <Card className="mt-4 p-4 flex justify-center"><Spinner /></Card>
+                  ) : data.records.map((p) => <TrickCard trick={p} bookmarks={trickIds} />)
+                }
+                {
+                  !isLoading && totalPages > 1 && (
+                    <div className="flex justify-center mt-8">
+                      <Pagination
+                        totalPages={totalPages}
+                        onChange={changePage}
+                        defaultActivePage={activePage}
+                      />
+                    </div>
+                  )
+                }
+              </>
+            ) : <Card title="You are not authorized" />
           }
         </div>
       </main>
