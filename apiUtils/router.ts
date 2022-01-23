@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { strToHash } from '../helpers';
+
 type Data = {
   message: string;
   errors?: any[];
@@ -32,7 +34,11 @@ const responseMessages: Record<number, string> = {
   403: 'Forbidden',
 };
 
-const middlewareCache: Record<string, { res: ThenType<Middleware>, setAt: number }> = {};
+const middlewareCache: Record<string, {
+  res: ThenType<Middleware>,
+  setAt: number,
+  hash: number,
+}> = {};
 const cacheTime = 10 * 60 * 1000;
 
 export function router(routes: Route<any[]>[]) {
@@ -50,10 +56,17 @@ export function router(routes: Route<any[]>[]) {
       const middlewareRes: ThenType<Middleware>[] = [];
 
       for await (const md of matchedRoute.middleware) {
-        if (!middlewareCache[md.name] || Date.now() - middlewareCache[md.name].setAt >= cacheTime) {
+        const hash = strToHash(req.rawHeaders.join());
+
+        if (
+          !middlewareCache[md.name]
+          || Date.now() - middlewareCache[md.name].setAt >= cacheTime
+          || middlewareCache[md.name].hash !== hash
+        ) {
           middlewareCache[md.name] = {
             res: await md(req, res),
             setAt: Date.now(),
+            hash: strToHash(req.rawHeaders.join()),
           };
         }
 
