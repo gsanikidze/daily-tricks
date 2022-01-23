@@ -80,4 +80,26 @@ const deleteBookmark: Route<[
   },
 };
 
-export default router([addBookmark, deleteBookmark]);
+const getBookmarkIds: Route<[
+  ThenType<typeof dbConnection>,
+]> = {
+  matches: (req) => req.method === 'GET',
+  middleware: [dbConnection],
+  handler: async (
+    req,
+    res,
+    middleware,
+  ) => {
+    const [connection] = middleware;
+    const userId = req.query.id;
+    const user = await connection.manager.findOne(User, { where: { fbId: userId as string } });
+
+    if (!user) {
+      return [404];
+    }
+
+    return [200, user.bookmarkedTricks];
+  },
+};
+
+export default router([addBookmark, deleteBookmark, getBookmarkIds]);
