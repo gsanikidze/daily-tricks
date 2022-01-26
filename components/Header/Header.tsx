@@ -1,5 +1,6 @@
 import React from 'react';
 import { GitHub, LogOut } from 'react-feather';
+import Link from 'next/link';
 
 import Button from '../Button';
 import useAuth from '../../hooks/useAuth';
@@ -14,22 +15,30 @@ export default function Header() {
 
   return (
     <header
-      className="bg-white shadow dark:bg-gray-800 py-4"
+      className="bg-white shadow dark:bg-gray-800 py-2 pb-4 md:py-4 px-4"
     >
       <div className="flex justify-between items-center max-w-screen-lg mx-auto">
-        <div className="flex space-x-4">
-          <h5>
-            Daily Tricks
-          </h5>
-          <Navigation
-            navItems={[
-              { href: '/', text: 'Feed' },
-              { href: '/bookmarks', text: 'Bookmarks' },
-            ]}
-          />
+        <div className="flex space-x-2 md:space-x-4">
+          <Link passHref href="/">
+            <a>
+              <h5 className="flex items-center">
+                Daily Tricks
+              </h5>
+            </a>
+          </Link>
+          <div className="hidden lg:inline-block">
+            <Navigation
+              navItems={[
+                { href: '/', text: 'Feed' },
+                { href: '/bookmarks', text: 'Bookmarks' },
+              ]}
+            />
+          </div>
         </div>
         <div className="flex items-center space-x-4">
-          <SearchBox />
+          <span className="hidden lg:inline-block">
+            <SearchBox />
+          </span>
           {
           isAuthorized ? (
             <div className="flex items-center space-x-4">
@@ -48,10 +57,21 @@ export default function Header() {
               beforeAddon={<GitHub size={16} />}
               onClick={authWithGithub}
             >
-              Login With GitHub
+              GitHub Auth
             </Button>
           )
         }
+        </div>
+      </div>
+      <div className="border-t pt-4 mt-2 md:mt-4 flex justify-between border-gray-200 dark:border-gray-700 lg:hidden items-center">
+        <Navigation
+          navItems={[
+            { href: '/', text: 'Feed' },
+            { href: '/bookmarks', text: 'Bookmarks' },
+          ]}
+        />
+        <div className="absolute right-4">
+          <SearchBox />
         </div>
       </div>
     </header>

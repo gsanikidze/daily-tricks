@@ -40,7 +40,7 @@ const Home = ({ activePage, q }: InferGetServerSidePropsType<typeof getServerSid
         <meta name="description" content="Daily Tricks" />
       </Head>
       <main>
-        <div className="max-w-screen-md mx-auto my-4">
+        <div className="mx-4 max-w-screen-md md:mx-auto my-4">
           <CodeEditor />
           {
             isFetching ? (

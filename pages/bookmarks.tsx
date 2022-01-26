@@ -38,7 +38,7 @@ const Bookmarks = ({ activePage, q }: InferGetServerSidePropsType<typeof getServ
         <title>Bookmarks | Daily Tricks</title>
       </Head>
       <main>
-        <div className="max-w-screen-md mx-auto my-4">
+        <div className="mx-4 max-w-screen-md md:mx-auto my-4">
           {
             isAuthorized ? (
               <>
