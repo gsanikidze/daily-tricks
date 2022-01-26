@@ -122,18 +122,18 @@ export default function CodeEditor({
         <div className="space-x-4 flex items-center">
           {
             isEditorOpen && (
-            <>
-              <Select
-                instanceId="languages"
-                options={languages}
-                onChange={changeLanguage}
-                value={selectedLanguage}
-                className="w-40"
-              />
-              <Button onClick={onPublish}>
-                Publish
-              </Button>
-            </>
+              <span className="md:flex space-x-4 hidden">
+                <Select
+                  instanceId="languages"
+                  options={languages}
+                  onChange={changeLanguage}
+                  value={selectedLanguage}
+                  className="w-40"
+                />
+                <Button onClick={onPublish}>
+                  Publish
+                </Button>
+              </span>
             )
           }
           {
@@ -142,12 +142,28 @@ export default function CodeEditor({
                 onClick={() => setIsEditorOpen(!isEditorOpen)}
                 type={isEditorOpen ? 'default' : 'primary'}
               >
-                { isEditorOpen ? <ChevronUp /> : <ChevronDown /> }
+                {isEditorOpen ? <ChevronUp /> : <ChevronDown />}
               </Button>
             )
           }
         </div>
       </div>
+      {
+        isEditorOpen && (
+          <div className="mx-4 flex justify-between pb-4 md:hidden">
+            <Select
+              instanceId="languages"
+              options={languages}
+              onChange={changeLanguage}
+              value={selectedLanguage}
+              className="w-40"
+            />
+            <Button onClick={onPublish}>
+              Publish
+            </Button>
+          </div>
+        )
+      }
       <div className={`rounded-b-lg overflow-hidden ${isEditorOpen ? 'h-auto' : 'h-0'}`}>
         {
           isEditorOpen && (

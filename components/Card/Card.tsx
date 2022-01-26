@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface Props {
-  children?: string | JSX.Element[] | JSX.Element;
+  children?: string | JSX.Element[] | JSX.Element | any;
   className?: string;
   addonBefore?: string | JSX.Element[] | JSX.Element;
   title?: string;
