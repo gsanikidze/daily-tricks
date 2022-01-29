@@ -31,6 +31,7 @@ export default function Header() {
               navItems={[
                 { href: '/', text: 'Feed' },
                 { href: '/bookmarks', text: 'Bookmarks' },
+                { href: '/tools', text: 'Tools' },
               ]}
             />
           </div>
