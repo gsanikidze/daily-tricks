@@ -4,29 +4,42 @@ import { ExternalLink } from 'react-feather';
 import Card from './Card';
 import Tag from './Tag';
 
-export default function ToolCard() {
+interface Props {
+  name: string;
+  description: string;
+  tags: string[];
+  categories: string[];
+  homepageUrl: string;
+  imageSrc: string;
+}
+
+export default function ToolCard({
+  name, description, tags, categories, homepageUrl, imageSrc,
+}: Props) {
   return (
     <Card
-      title="VSCode"
+      title={name}
       avatar={{
-        src: 'https://storage.googleapis.com/dt-tool-avatars/vscode.png',
-        alt: 'vscode.png',
+        src: imageSrc,
+        alt: `${name}.png`,
       }}
       addonBefore={(
         <div className="flex justify-between items-center">
-          <div>
-            <Tag>Editors</Tag>
+          <div className="space-x-4">
+            {
+              categories.map((i) => <Tag key={i}>{i}</Tag>)
+            }
           </div>
           <div className="flex space-x-2">
-            <Tag flat>#Editor</Tag>
-            <Tag flat>#TypeScript</Tag>
-            <Tag flat>#Tool</Tag>
+            {
+              tags.map((i) => <Tag flat key={i}>{`#${i}`}</Tag>)
+            }
           </div>
         </div>
   )}
       addonAfterTitle={(
         <div>
-          <a href="https://code.visualstudio.com/" target="_blank" rel="noreferrer">
+          <a href={homepageUrl} target="_blank" rel="noreferrer">
             <ExternalLink
               color="white"
               width={20}
@@ -38,14 +51,7 @@ export default function ToolCard() {
   )}
     >
       <p className="px-4 pb-4">
-        Visual Studio Code is a lightweight but powerful
-        source code editor which runs on your desktop
-        and is available for Windows, macOS and Linux.
-        It comes with built-in support for JavaScript,
-        TypeScript and Node.js and has a rich ecosystem
-        of extensions for other languages
-        (such as C++, C#, Java, Python, PHP, Go) and
-        runtimes (such as .NET and Unity).
+        { description }
       </p>
     </Card>
   );

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { AppState } from '..';
+import { Tool } from '../../db';
 import { User } from './user';
 
 const BASE_URL = '/api';
@@ -47,7 +48,7 @@ const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Post', 'Bookmark'],
+  tagTypes: ['Trick', 'Bookmark', 'Tool'],
   endpoints: (build) => ({
     getTricks: build.query<{ records: Trick[], count: number }, {
       take?: number,
@@ -56,7 +57,7 @@ const api = createApi({
     }>({
       query: (q) => ({ url: `tricks?${queryObjToSt(q)}` }),
       transformResponse: (response: { data: { records: Trick[], count: number } }) => response.data,
-      providesTags: ['Post'],
+      providesTags: ['Trick'],
     }),
     addTrick: build.mutation<Trick, CreatePost>({
       query: (body) => ({
@@ -65,7 +66,7 @@ const api = createApi({
         body,
       }),
       transformResponse: (response: { data: Trick }) => response.data,
-      invalidatesTags: ['Post'],
+      invalidatesTags: ['Trick'],
     }),
     editTrick: build.mutation<Trick, { id: string, body: UpdatePost }>({
       query: ({ id, body }) => ({
@@ -80,7 +81,7 @@ const api = createApi({
         method: 'DELETE',
         url: `tricks/${id}`,
       }),
-      invalidatesTags: ['Post'],
+      invalidatesTags: ['Trick'],
     }),
     bookmarkTrick: build.mutation<Trick, string>({
       query: (id: string) => ({
@@ -115,6 +116,15 @@ const api = createApi({
       }),
       transformResponse: (response: { data: ToolCategory[] }) => response.data,
     }),
+    getTools: build.query<{ records: Tool[], count: number }, {
+      take?: number,
+      skip?: number,
+      q?: string
+    }>({
+      query: (q) => ({ url: `tools?${queryObjToSt(q)}` }),
+      transformResponse: (response: { data: { records: Tool[], count: number } }) => response.data,
+      providesTags: ['Tool'],
+    }),
   }),
 });
 
@@ -128,5 +138,6 @@ export const {
   useGetBookmarkIdsQuery,
   useGetBookmarkedTricksQuery,
   useGetToolCategoriesQuery,
+  useGetToolsQuery,
 } = api;
 export default api;
