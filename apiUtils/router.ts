@@ -32,6 +32,7 @@ const responseMessages: Record<number, string> = {
   201: 'Created Successfully',
   200: 'Success Response',
   403: 'Forbidden',
+  400: 'Invalid Request',
 };
 
 const middlewareCache: Record<string, {
