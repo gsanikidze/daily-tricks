@@ -24,6 +24,11 @@ interface UpdatePost {
   title: string;
 }
 
+interface ToolCategory {
+  id: string;
+  title: string;
+}
+
 const queryObjToSt = (obj: Record<string, string | number>) => Object.entries(obj)
   .filter((tuple) => !!tuple[1])
   .map(([key, value]) => `${key}=${value}`)
@@ -104,6 +109,12 @@ const api = createApi({
       transformResponse: (response: { data: { records: Trick[], count: number } }) => response.data,
       providesTags: ['Bookmark'],
     }),
+    getToolCategories: build.query<ToolCategory[], void>({
+      query: () => ({
+        url: 'tool-category',
+      }),
+      transformResponse: (response: { data: ToolCategory[] }) => response.data,
+    }),
   }),
 });
 
@@ -116,5 +127,6 @@ export const {
   useDeleteBookmarkTrickMutation,
   useGetBookmarkIdsQuery,
   useGetBookmarkedTricksQuery,
+  useGetToolCategoriesQuery,
 } = api;
 export default api;

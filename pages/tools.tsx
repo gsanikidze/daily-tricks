@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 
 import ToolCard from '../components/ToolCard';
 import Tabs from '../components/Tabs';
+import { useGetToolCategoriesQuery } from '../store/modules/api';
 
-export default function tools() {
-  const tabs = [
-    { title: 'All', key: 'all' },
-    { title: 'Editors', key: 'editors' },
-  ];
+export default function Tools() {
+  const { data } = useGetToolCategoriesQuery();
+  const [tabs, setTabs] = useState<{ title: string, key: string }[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const newSt = [{ title: 'All', key: 'all' }];
+
+      data.forEach((i) => {
+        newSt.push({
+          title: i.title,
+          key: i.id,
+        });
+      });
+
+      setTabs(newSt);
+    }
+  }, [data]);
 
   return (
     <div>
